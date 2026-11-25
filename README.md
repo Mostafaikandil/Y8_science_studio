@@ -6,7 +6,7 @@ A free, single-page science practice app for **Year 8 (ages 12–13)** students 
 
 Open the live page in any modern browser:
 
-`https://YOUR-USERNAME.github.io/Y8-science-studio/`
+`https://mostafaikandil.github.io/Y8_science_studio/`
 
 On a phone or tablet, add it to the Home screen so it opens like an app (Chrome: ⋮ menu → *Add to Home screen*; Safari: Share → *Add to Home Screen*).
 
