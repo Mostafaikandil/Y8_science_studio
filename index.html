@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#0f766e">
+<title>Y8 Science Studio</title>
+<style>
+:root{--g1:rgba(15,118,110,.2);--g2:rgba(124,58,237,.15);--grid:rgba(15,118,110,.07);--bg:#f0faf8;--card:#fff;--ink:#10252b;--ac:#0f766e;--ac2:#7c3aed;--good:#16a34a;--bad:#dc2626;--key:#dcefec;--mute:#5d7b80;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--g1:rgba(45,212,191,.22);--g2:rgba(167,139,250,.18);--grid:rgba(120,220,200,.06);--bg:#0e1b22;--card:#16262f;--ink:#e8f6f4;--ac:#2dd4bf;--ac2:#a78bfa;--good:#4ade80;--bad:#f87171;--key:#223743;--mute:#9ec0c0}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+html,body{margin:0;min-height:100%}
+body{background-color:var(--bg);background-image:radial-gradient(60rem 40rem at 8% -8%,var(--g1),transparent 62%),radial-gradient(50rem 40rem at 100% 108%,var(--g2),transparent 58%),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:auto,auto,34px 34px,34px 34px;background-attachment:fixed;color:var(--ink);font-family:"Avenir Next","Segoe UI",Roboto,Arial,sans-serif;display:flex;justify-content:center}
+#app{width:100%;max-width:560px;padding:14px;display:flex;flex-direction:column;align-items:center}
+h1{font-size:28px;margin:10px 0 2px;text-align:center}h2{margin:6px 0 8px;font-size:19px}
+.sub{color:var(--mute);text-align:center;margin:0 0 14px}
+.card{background:var(--card);border-radius:18px;padding:18px;width:100%;border:1px solid var(--key);box-shadow:0 6px 22px rgba(20,20,60,.16);margin-bottom:12px}
+.btn{background:var(--ac);color:var(--bg);border:0;border-radius:14px;font-size:18px;font-weight:700;padding:12px 22px;margin-top:10px;cursor:pointer}
+.btn.alt{background:var(--key);color:var(--ink)}.btn.sm{font-size:14px;padding:8px 12px;margin:0}
+.row2{display:flex;gap:10px;width:100%}.row2 .btn{flex:1;margin:0 0 12px}
+.mod,.lvl{display:flex;gap:12px;align-items:center;width:100%;text-align:left;margin:6px 0;padding:13px 16px;border-radius:16px;border:2px solid var(--key);background:var(--card);color:var(--ink);font-size:15px;cursor:pointer}
+.mod .ic{font-size:30px;width:38px;text-align:center}.mod b,.lvl b{display:block;font-size:17px}.mod small,.mod em{display:block;color:var(--mute);font-style:normal;font-size:13px}
+.lvl{display:block}.lvl[disabled]{opacity:.4}.lvl small{float:right;color:var(--mute)}
+.top{display:flex;gap:6px;justify-content:space-between;align-items:center;width:100%;font-weight:700;margin-bottom:8px;font-size:15px}
+.bar{height:8px;width:100%;background:var(--key);border-radius:8px;overflow:hidden;margin-bottom:12px}.bar i{display:block;height:100%;background:var(--ac2)}
+.tag{color:var(--mute);font-size:13px;margin-bottom:8px}
+.qt{font-size:26px;font-weight:700;line-height:1.35;margin:6px 0 14px;text-align:center}
+#ans{min-height:58px;border:3px solid var(--ac);border-radius:12px;font-size:30px;font-weight:700;display:flex;align-items:center;justify-content:center;letter-spacing:2px}
+#ans.good{border-color:var(--good);color:var(--good)}#ans.bad{border-color:var(--bad);color:var(--bad)}
+.opt{display:block;width:100%;margin:8px 0;padding:14px;border-radius:12px;border:2px solid var(--key);background:var(--card);color:var(--ink);font-size:22px;font-weight:700;cursor:pointer}
+.opt.good{border-color:var(--good)}.opt.bad{border-color:var(--bad)}
+#fb{min-height:24px;margin-top:10px;text-align:center}.sol{color:var(--mute);margin:6px 0;font-size:15px;text-align:left}
+#kp{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%}
+#kp button{font-size:26px;font-weight:700;padding:14px 0;border:0;border-radius:12px;background:var(--key);color:var(--ink);cursor:pointer}
+#kp .en{background:var(--good);color:#fff}#kp .bk{background:var(--bad);color:#fff}
+#pad{display:none;width:100%;height:190px;border:2px dashed var(--mute);border-radius:12px;background:var(--card);touch-action:none;margin-bottom:6px}
+input,textarea{font:inherit;font-size:18px;padding:10px;border-radius:12px;border:2px solid var(--key);width:100%;background:var(--card);color:var(--ink);user-select:text;-webkit-user-select:text;text-align:center}
+textarea{height:70px;font-size:12px;text-align:left}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl td,.tbl th{padding:6px 4px;border-bottom:1px solid var(--key);text-align:center}.tbl td:first-child{text-align:left}
+.wr{text-align:left;font-size:14px;padding:6px 0;border-bottom:1px solid var(--key)}.wr em{color:var(--mute);font-style:normal;font-size:12px}
+.foot{padding:10px 0}
+.tb{padding:6px 10px;font-size:16px}
+.fg{width:100%;max-height:320px;display:block;margin:4px auto 8px}.ln{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.sl{stroke:var(--mute);stroke-width:1.5}
+.pc{fill:var(--card);stroke:var(--ac);stroke-width:2}.pc.h{fill:var(--ac)}.pn{font:700 13px Arial,sans-serif;fill:var(--ink);text-anchor:middle}.pn.h{fill:var(--bg)}.dot{fill:var(--bad)}
+.tx{font:600 10.5px Arial,sans-serif;fill:#1f2433;text-anchor:middle}.t2{font:700 22px Arial,sans-serif;fill:var(--ink);text-anchor:middle}.t3{font:600 13px Arial,sans-serif;fill:var(--ink);text-anchor:middle}
+.mask{text-align:center;font:700 22px "Courier New",monospace;letter-spacing:2px;margin:4px 0 10px;color:var(--mute)}
+input.good{border-color:var(--good)}input.bad{border-color:var(--bad)}#ti{margin-bottom:4px}
+</style>
+</head>
+<body><div id="app"></div>
+<script>
+var KEY="science_studio_v1",NQ=10;
+var TN=["Warm-up","Practice","Challenge"],TD=["Recall and label","Write the answer","Apply and explain"];
+function blank(){return {name:"",pin:"",mute:false,prog:[1,1,1,1,1,1,1,1],best:{},stat:{},wrong:[],plays:[],sess:{}};}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.prog&&d.prog.length===8){d.best=d.best||{};d.stat=d.stat||{};d.wrong=d.wrong||[];d.plays=d.plays||[];d.sess=d.sess||{};return d;}}catch(e){}return blank();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var S=load(),app=document.getElementById("app"),qs=[],qi=0,sc=0,ent="",done=false,wait=false,ses={},padOn=false,tmr=null;
+function $(i){return document.getElementById(i);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+/* ---------- helpers, figures and question bank ---------- */
+function R(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function P(a){return a[R(0,a.length-1)];}
+function f(x){return ""+(+x.toFixed(8));}
+function shuf(a){a=a.slice();for(var i=a.length-1,j,t;i>0;i--){j=R(0,i);t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function lev(a,b){var m=[],i,j;for(i=0;i<=a.length;i++)m[i]=[i];for(j=1;j<=b.length;j++)m[0][j]=j;for(i=1;i<=a.length;i++)for(j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));return m[a.length][b.length];}
+function nz(s){return s.toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();}
+function chkT(u,q){u=nz(u);var r=0;if(!u)return 0;q.a.forEach(function(x){x=nz(x);if(u===x||u===x+"s"||u+"s"===x)r=2;else if(r<1&&x.length>=7&&lev(u,x)<=(x.length>=10?2:1))r=1;});return r;}
+function mask(a){return a.split(" ").map(function(w){return w.charAt(0)+" "+new Array(w.length).join("_ ").trim();}).join("   ");}
+var FG={};
+FG.microscope={t:"microscope",vb:"0 0 420 335",d:["Condenser","Slide clip","Tripod"],base:'<rect x="115" y="292" width="190" height="22" rx="7" fill="#5c6370"/><path d="M262 292C345 270 345 130 245 85" fill="none" stroke="#7a8190" stroke-width="22" stroke-linecap="round"/><rect x="186" y="70" width="28" height="125" fill="#8b93a1"/><rect x="189" y="26" width="22" height="48" rx="3" fill="#2f343d"/><rect x="180" y="192" width="40" height="12" rx="3" fill="#a9b0bd"/><rect x="178" y="204" width="13" height="30" rx="2" fill="#c7ccd6"/><rect x="209" y="204" width="13" height="24" rx="2" fill="#c7ccd6"/><rect x="140" y="248" width="125" height="10" fill="#6d7585"/><rect x="170" y="243" width="62" height="5" fill="#cfe6ff" stroke="#6d7585"/><ellipse cx="200" cy="278" rx="24" ry="8" fill="#ffd54a" stroke="#c9a200"/><circle cx="310" cy="155" r="17" fill="#2f343d"/><circle cx="310" cy="155" r="7" fill="#9aa2b1"/><circle cx="312" cy="233" r="10" fill="#2f343d"/><circle cx="312" cy="233" r="4" fill="#9aa2b1"/>',
+pts:[[200,40,40,35,"eyepiece lens|eyepiece","The eyepiece lens is the lens you look through. It magnifies the image."],[184,222,40,200,"objective lens|objective|objective lenses","Objective lenses magnify the specimen. They come in different strengths."],[150,253,40,255,"stage","The stage holds the slide in place."],[200,278,40,290,"light source|light|lamp|mirror","The light source shines light up through the specimen."],[310,155,390,120,"coarse focus knob|coarse focus|coarse adjustment knob|coarse focus wheel|coarse focusing knob","The coarse focus knob moves the stage a large distance to bring the specimen roughly into focus."],[324,197,390,185,"arm","The arm holds the tube and is used to carry the microscope."],[312,233,390,250,"fine focus knob|fine focus|fine adjustment knob|fine focus wheel|fine focusing knob","The fine focus knob makes small adjustments to give a sharp image."],[210,303,40,322,"base","The base supports the whole microscope."]]};
+FG.animal={t:"animal cell",vb:"0 0 420 300",base:'<ellipse cx="190" cy="150" rx="130" ry="105" fill="#fde2cf" stroke="#b5651d" stroke-width="4"/><circle cx="205" cy="135" r="36" fill="#cbbdf0" stroke="#5b4b8a" stroke-width="3"/><circle cx="212" cy="140" r="10" fill="#8a78c2"/><g fill="#f4a6a6" stroke="#a33" stroke-width="2"><ellipse cx="120" cy="195" rx="26" ry="13" transform="rotate(-25 120 195)"/><ellipse cx="265" cy="220" rx="26" ry="13" transform="rotate(20 265 220)"/></g><path d="M102 198q8-10 14 0t14 0M247 223q8-10 14 0t14 0" stroke="#a33" fill="none" stroke-width="1.6"/><g fill="#444"><circle cx="255" cy="190" r="2.6"/><circle cx="266" cy="182" r="2.6"/><circle cx="248" cy="178" r="2.6"/><circle cx="150" cy="105" r="2.6"/><circle cx="160" cy="95" r="2.6"/></g>',
+pts:[[320,150,395,150,"cell membrane|membrane","The cell membrane controls what enters and leaves the cell."],[110,120,25,80,"cytoplasm","The cytoplasm is where most chemical reactions in the cell happen."],[215,125,395,60,"nucleus","The nucleus contains the DNA and controls the cell's activities."],[118,195,25,235,"mitochondria|mitochondrion","Mitochondria release energy from glucose in respiration."],[255,190,395,235,"ribosome|ribosomes","Ribosomes make proteins."]]};
+FG.plant={t:"plant cell",vb:"0 0 420 280",d:["Cell sap","Starch grain"],base:'<rect x="50" y="35" width="290" height="230" rx="14" fill="#dcf1c9" stroke="#3a7d1e" stroke-width="9"/><rect x="59" y="44" width="272" height="212" rx="9" fill="none" stroke="#8b5e3c" stroke-width="2.5"/><rect x="115" y="90" width="170" height="110" rx="45" fill="#cfe8f7" stroke="#5a9fc4" stroke-width="2.5"/><circle cx="105" cy="228" r="22" fill="#cbbdf0" stroke="#5b4b8a" stroke-width="3"/><circle cx="108" cy="231" r="7" fill="#8a78c2"/><g fill="#43a047" stroke="#1b5e20" stroke-width="1.5"><ellipse cx="85" cy="70" rx="17" ry="9"/><ellipse cx="305" cy="70" rx="17" ry="9"/><ellipse cx="270" cy="230" rx="17" ry="9"/><ellipse cx="305" cy="150" rx="9" ry="17"/></g>',
+pts:[[341,95,400,70,"cell wall","The cell wall is rigid and supports the plant cell."],[331,205,400,215,"cell membrane|membrane","The cell membrane controls what enters and leaves the cell."],[90,165,20,150,"cytoplasm","The cytoplasm is where most chemical reactions in the cell happen."],[105,228,20,235,"nucleus","The nucleus contains the DNA and controls the cell."],[200,145,205,15,"vacuole|permanent vacuole","The vacuole is filled with cell sap and helps keep the cell firm."],[305,70,400,25,"chloroplast|chloroplasts","Chloroplasts contain chlorophyll, which absorbs light for photosynthesis."]]};
+FG.levels={t:"",q:"Which level of organisation is box {n}?",vb:"0 0 430 100",d:["Population","Molecule"],base:(function(){var n=[["muscle","fibre"],["cardiac","muscle"],["heart"],["heart +","vessels +","blood"],["whole","human"]],s="",i,j;for(i=0;i<5;i++){s+='<rect x="'+(4+i*86)+'" y="38" width="66" height="54" rx="8" fill="#e3e7ff" stroke="#4338ca" stroke-width="2"/>';for(j=0;j<n[i].length;j++)s+='<text class="tx" x="'+(37+i*86)+'" y="'+(n[i].length===1?69:n[i].length===2?60+j*14:54+j*13)+'">'+n[i][j]+'</text>';if(i<4)s+='<path class="ln" d="M'+(72+i*86)+' 65h12m-5-5l5 5l-5 5"/>';}return s;})(),
+pts:[[37,38,37,14,"cell","A cell is the basic building block of living things."],[123,38,123,14,"tissue","A tissue is a group of similar cells doing the same job."],[209,38,209,14,"organ","An organ is made of different tissues working together."],[295,38,295,14,"organ system|system","An organ system is a group of organs working together."],[381,38,381,14,"organism","An organism is a whole living thing made of organ systems."]]};
+FG.symbols={t:"",q:"Name the circuit symbol numbered {n}.",vb:"0 0 440 215",base:(function(){var a=['<path class="ln" d="M6 52h44M50 30v44M62 52h42"/><path class="ln" style="stroke-width:7" d="M62 40v24"/>','<path class="ln" d="M6 52h28M34 30v44M44 52h14M58 30v44M68 52h36"/><path class="ln" style="stroke-width:7" d="M44 40v24M68 40v24"/>','<circle class="ln" cx="55" cy="52" r="22"/><path class="ln" d="M6 52h27M77 52h27M39 36l32 32M71 36l-32 32"/>','<path class="ln" d="M6 62h30M76 62h28M36 62l36-28"/><circle class="ln" cx="36" cy="62" r="3"/><circle class="ln" cx="76" cy="62" r="3"/>','<circle class="ln" cx="55" cy="52" r="22"/><path class="ln" d="M6 52h27M77 52h27"/><text class="t2" x="55" y="60">A</text>','<circle class="ln" cx="55" cy="52" r="22"/><path class="ln" d="M6 52h27M77 52h27"/><text class="t2" x="55" y="60">V</text>','<rect class="ln" x="32" y="42" width="46" height="20"/><path class="ln" d="M6 52h26M78 52h26"/>','<circle class="ln" cx="55" cy="52" r="22"/><path class="ln" d="M6 52h27M77 52h27"/><text class="t2" x="55" y="60">M</text>'],s="",i;for(i=0;i<8;i++)s+='<g transform="translate('+(i%4*110)+','+(24+(i/4|0)*98)+')">'+a[i]+'</g>';return s;})(),
+pts:[[55,76,55,22,"cell|electric cell|single cell","A cell is a single source of electrical energy."],[165,76,165,22,"battery|battery of cells","A battery is two or more cells joined together."],[275,76,275,22,"bulb|lamp|light bulb","A bulb lights up when current flows through it."],[385,76,385,22,"switch|open switch","A switch opens or closes the circuit."],[55,174,55,128,"ammeter","An ammeter measures current. It is connected in series."],[165,174,165,128,"voltmeter","A voltmeter measures potential difference. It is connected in parallel."],[275,174,275,128,"resistor|fixed resistor","A resistor reduces the current in a circuit."],[385,174,385,128,"motor","A motor transfers electrical energy to movement."]]};
+FG.series={vb:"0 0 300 165",base:'<path class="ln" d="M40 150V105M40 92V40h48M132 40h46M222 40h38v110H40"/><path class="ln" d="M26 105h28"/><path class="ln" style="stroke-width:7" d="M32 92h16"/><circle class="ln" cx="110" cy="40" r="22"/><path class="ln" d="M95 25l30 30M125 25l-30 30"/><circle class="ln" cx="200" cy="40" r="22"/><path class="ln" d="M185 25l30 30M215 25l-30 30"/><text class="t3" x="110" y="84">Bulb A</text><text class="t3" x="200" y="84">Bulb B</text><text class="t3" x="78" y="103">Cell</text>'};
+FG.parallel={vb:"0 0 300 190",base:'<path class="ln" d="M60 45V88M60 100V145M60 45h68M172 45h68V145H172M128 145H60"/><path class="ln" d="M46 100h28"/><path class="ln" style="stroke-width:7" d="M52 88h16"/><circle class="ln" cx="150" cy="45" r="22"/><path class="ln" d="M135 30l30 30M165 30l-30 30"/><circle class="ln" cx="150" cy="145" r="22"/><path class="ln" d="M135 130l30 30M165 130l-30 30"/><text class="t3" x="150" y="92">Bulb A</text><text class="t3" x="150" y="112">Bulb B</text><text class="t3" x="30" y="98">Cell</text>'};
+FG.magnet={t:"bar magnet",q:"Name the part marked {n} on the bar magnet.",vb:"0 0 420 232",d:["Iron filings","Compass needle","Electric current"],base:'<rect x="130" y="90" width="80" height="50" fill="#e4572e" stroke="#444" stroke-width="2.5"/><rect x="210" y="90" width="80" height="50" fill="#2e86e4" stroke="#444" stroke-width="2.5"/><text class="t2" style="fill:#fff" x="170" y="123">N</text><text class="t2" style="fill:#fff" x="250" y="123">S</text><g class="ln" style="stroke-width:1.8;stroke:var(--mute)"><path d="M150 90C150 20 270 20 270 90"/><path d="M140 90C140 -10 280 -10 280 90"/><path d="M150 140C150 210 270 210 270 140"/><path d="M140 140C140 240 280 240 280 140"/></g><g fill="var(--mute)"><path d="M214 37l-9-6v12z"/><path d="M214 15l-9-6v12z"/><path d="M214 193l-9-6v12z"/><path d="M214 215l-9-6v12z"/></g>',
+pts:[[150,115,40,115,"north pole|north|n pole|north seeking pole","The end marked N is the north (north-seeking) pole."],[270,115,385,115,"south pole|south|s pole|south seeking pole","The end marked S is the south pole."],[210,37,385,50,"magnetic field line|field line|magnetic field|line of force","Field lines show the direction of the force on a north pole: from north to south outside the magnet."]]};
+FG.emag={t:"electromagnet",vb:"0 0 420 240",d:["Switch","Bulb","Permanent magnet"],base:(function(){var s='<rect x="120" y="108" width="190" height="28" fill="#9aa4b5" stroke="#5b6475" stroke-width="2"/>',i;for(i=0;i<8;i++)s+='<path d="M'+(145+i*18)+' 98l12 48" stroke="#c47f2a" stroke-width="4.5" fill="none" stroke-linecap="round"/>';return s+'<path class="ln" d="M145 98V50h45M230 50h41V98"/><path class="ln" d="M190 50h6M196 34v32M205 50h10M215 34v32M224 50h6"/><path class="ln" style="stroke-width:7" d="M205 41v18M224 41v18"/><rect x="316" y="118" width="16" height="7" rx="3.5" fill="none" stroke="#666" stroke-width="2"/><rect x="316" y="130" width="16" height="7" rx="3.5" fill="none" stroke="#666" stroke-width="2"/>';})(),
+pts:[[130,122,40,170,"iron core|core|iron nail|nail|soft iron core","The iron core becomes magnetic when current flows, which makes the electromagnet much stronger."],[220,146,395,205,"coil|coil of wire|solenoid|wire coil","The coil of wire carries the current and creates the magnetic field."],[210,50,395,45,"battery|cell|power supply","The battery supplies the current."]]};
+function figHTML(g,hl){var s='<svg class="fg" viewBox="'+g.vb+'">'+g.base;(g.pts||[]).forEach(function(p,i){var h=(i===hl);s+='<line class="sl" x1="'+p[2]+'" y1="'+p[3]+'" x2="'+p[0]+'" y2="'+p[1]+'"/>'+(h?'<circle class="dot" cx="'+p[0]+'" cy="'+p[1]+'" r="4.5"/>':'')+'<circle class="pc'+(h?' h':'')+'" cx="'+p[2]+'" cy="'+p[3]+'" r="12"/><text class="pn'+(h?' h':'')+'" x="'+p[2]+'" y="'+(p[3]+4.5)+'">'+(i+1)+'</text>';});return s+'</svg>';}
+var BANK=[
+{n:"Using a microscope",s:"Parts, technique and magnification",i:"🔬",f:["microscope"],
+ mq:[[0,"What does a microscope do?","It makes tiny objects look bigger","It makes light brighter","It cuts specimens into slices","It makes objects move","A microscope magnifies, so cells that are too small to see can be studied."],
+ [0,"Which knob do you turn first to bring a slide roughly into focus?","Coarse focus knob","Fine focus knob","Objective lens","Light source","The coarse focus knob makes big movements. Use the fine focus knob afterwards to sharpen the image."],
+ [1,"Why should you start with the lowest-power objective lens?","It shows a wider area, so the specimen is easier to find","It gives the highest magnification","It makes the light brighter","It stops the slide moving","A low-power lens gives a wide field of view, so you can find the specimen before zooming in."],
+ [1,"Why are some specimens stained before they are viewed?","The stain makes parts of the cell easier to see","The stain makes the cell grow","The stain kills bacteria on the lens","The stain makes the lens stronger","Many cell parts are almost colourless, so a stain makes them visible."],
+ [2,"Why must a specimen on a slide be very thin?","Light has to pass through it to form an image","It must fit under the stage clips","It will magnify more","It will dry out faster","A light microscope needs light to pass through the specimen."],
+ [2,"Why is a cover slip placed on top of the specimen?","It holds the specimen flat and protects the objective lens","It increases the magnification","It stains the specimen","It keeps the specimen warm","A cover slip keeps the specimen flat and stops the objective lens touching it."]],
+ g:[function(){var e=P([10,15]),o=P([4,10]);return {q:"A microscope has a ×"+e+" eyepiece lens and a ×"+o+" objective lens. What is the total magnification?",a:""+e*o,sol:"Total magnification = eyepiece × objective = "+e+" × "+o+" = "+e*o+"."};},
+ function(){var e=P([5,10,15]),o=P([10,40,100]);return {q:"A microscope has a ×"+e+" eyepiece lens and a ×"+o+" objective lens. What is the total magnification?",a:""+e*o,sol:"Total magnification = eyepiece × objective = "+e+" × "+o+" = "+e*o+"."};},
+ function(){if(Math.random()<.5){var o=P([4,10,40]);return {q:"A microscope gives a total magnification of ×"+o*10+". The eyepiece lens is ×10. What is the magnification of the objective lens?",a:""+o,sol:"Objective = total ÷ eyepiece = "+o*10+" ÷ 10 = "+o+"."};}var s=P([0.02,0.05,0.1]),m=P([40,100]);return {q:"A cell is "+s+" mm wide. It is viewed at ×"+m+" magnification. How wide does it look in the image? (mm)",a:f(s*m),sol:"Image size = real size × magnification = "+s+" × "+m+" = "+f(s*m)+" mm."};}]},
+{n:"Cells",s:"Animal and plant cells and what their parts do",i:"🦠",f:["animal","plant"],
+ tq:[["Which part of a cell controls its activities and contains the DNA?","nucleus","cytoplasm|cell membrane|mitochondria","The nucleus contains the DNA and controls what the cell does."],
+ ["Which part of a cell controls what enters and leaves?","cell membrane|membrane","cell wall|nucleus|chloroplast","The cell membrane controls the movement of substances in and out."],
+ ["Where in a cell does respiration release energy?","mitochondria|mitochondrion","nucleus|vacuole|chloroplast","Mitochondria release energy from glucose in respiration."],
+ ["Which part of a plant cell absorbs light for photosynthesis?","chloroplast|chloroplasts","cell wall|vacuole|nucleus","Chloroplasts contain chlorophyll, which absorbs light."],
+ ["Which part of a plant cell gives it strength and support?","cell wall","cell membrane|cytoplasm|nucleus","The rigid cell wall supports the plant cell."],
+ ["Which part of a plant cell stores cell sap?","vacuole|permanent vacuole","chloroplast|nucleus|mitochondria","The vacuole is filled with cell sap and keeps the cell firm."],
+ ["Where are proteins made in a cell?","ribosome|ribosomes","nucleus|vacuole|cell wall","Ribosomes make proteins."]],
+ mq:[[0,"Which cell part is found in plant cells but not in animal cells?","Cell wall","Nucleus","Cytoplasm","Cell membrane","Plant cells have a cell wall, chloroplasts and a permanent vacuole. Animal cells do not."],
+ [1,"Why do root cells have no chloroplasts?","No light reaches them underground","They do not respire","They have no cell wall","They are too small","Chloroplasts need light for photosynthesis, so root cells do not need them."],
+ [1,"Why do muscle cells contain many mitochondria?","They need lots of energy from respiration","They need to absorb light","They store water","They make proteins","Muscle contraction needs a lot of energy, released in mitochondria."],
+ [2,"Which pair of structures is found only in plant cells?","Chloroplasts and cell wall","Nucleus and cytoplasm","Mitochondria and ribosomes","Cell membrane and nucleus","Chloroplasts and a cell wall (with a permanent vacuole) are only in plant cells."],
+ [2,"A cell has a nucleus, a cell wall and chloroplasts. What type of cell is it?","A plant cell","An animal cell","A red blood cell","A sperm cell","A cell wall and chloroplasts show it is a plant cell."],
+ [2,"Why are leaf cells packed with chloroplasts?","To absorb as much light as possible for photosynthesis","To store water","To support the leaf","To release energy","More chloroplasts absorb more light, so more photosynthesis can happen."]]},
+{n:"Cell organisation",s:"Cells, tissues, organs and organ systems",i:"❤️",f:["levels"],
+ tq:[["A group of similar cells doing the same job is called a ...","tissue|tissues","organ|organism|cell","A tissue is a group of similar cells."],
+ ["The heart is an example of an ...","organ","tissue|organism|cell","The heart is made of different tissues, so it is an organ."],
+ ["The digestive system is an example of an organ ...","system|organ system","tissue|cell|organism","Several organs working together form an organ system."]],
+ mq:[[0,"Which of these is an organ?","Heart","Red blood cell","Muscle tissue","Circulatory system","The heart is an organ made of several tissues."],
+ [1,"Which list shows the levels in order from smallest to largest?","Cell, tissue, organ, organ system, organism","Tissue, cell, organ, organism, organ system","Organ, tissue, cell, organ system, organism","Cell, organ, tissue, organism, organ system","Cells make tissues, tissues make organs, organs make organ systems and systems make an organism."],
+ [1,"The stomach contains muscle, gland and lining tissues. What level of organisation is the stomach?","Organ","Tissue","Cell","Organ system","An organ is made of several different tissues working together."],
+ [1,"Which of these is an example of an organ system?","Digestive system","Stomach","Muscle tissue","Gland cell","The digestive system includes the mouth, stomach and intestines, working together."],
+ [2,"Why do large organisms need organ systems?","Different systems do different jobs, so the whole body works efficiently","Because cells cannot respire","Because tissues cannot work together","So that organisms have fewer cells","Specialised systems share out jobs such as digestion and circulation."],
+ [2,"Which sentence best describes a specialised cell?","A cell adapted to do one particular job","A cell with no nucleus","A cell identical to all others","A cell that cannot respire","Specialised cells have features that suit their function."],
+ [2,"A leaf contains xylem, phloem and palisade tissues. What level of organisation is a leaf?","Organ","Tissue","Cell","Organ system","A leaf is made of several tissues working together, so it is an organ."]]},
+{n:"Respiration",s:"Releasing energy from glucose in cells",i:"⚡",
+ tq:[["Which gas do cells use in aerobic respiration?","oxygen","carbon dioxide|nitrogen|hydrogen","Aerobic respiration uses oxygen to break down glucose."],
+ ["Which gas is made in respiration?","carbon dioxide","oxygen|nitrogen|helium","Carbon dioxide and water are the waste products."],
+ ["Which sugar is broken down in respiration?","glucose","starch|protein|fat","Glucose is the fuel for respiration."],
+ ["In which part of the cell does aerobic respiration mostly happen?","mitochondria|mitochondrion","nucleus|vacuole|cell wall","Mitochondria are the site of aerobic respiration."],
+ ["Respiration releases ... from glucose.","energy","oxygen|water|protein","Respiration releases energy for the cell to use."],
+ ["Respiration without oxygen is called ... respiration.","anaerobic|anaerobic respiration","aerobic|aquatic|acidic","Anaerobic means without oxygen."]],
+ mq:[[0,"What is the word equation for aerobic respiration?","Glucose + oxygen → carbon dioxide + water + energy","Carbon dioxide + water → glucose + oxygen","Glucose + water → oxygen + energy","Oxygen + carbon dioxide → glucose + energy","Glucose reacts with oxygen, releasing energy and making carbon dioxide and water."],
+ [0,"Why do living things respire?","To release energy for life processes","To make oxygen","To make glucose","To get rid of water","Energy is needed for movement, growth and keeping warm."],
+ [1,"What is made when muscle cells respire without enough oxygen?","Lactic acid","Oxygen","Glucose","Starch","In humans, anaerobic respiration makes lactic acid and releases less energy."],
+ [1,"Why does your breathing rate increase during exercise?","Muscles need more oxygen for respiration","Muscles make more oxygen","Your lungs need to get smaller","To make less carbon dioxide","More oxygen is needed to release more energy, and carbon dioxide must be removed."],
+ [1,"Which statement about aerobic and anaerobic respiration is correct?","Aerobic respiration releases more energy","Anaerobic respiration uses oxygen","Aerobic respiration makes lactic acid in humans","Anaerobic respiration releases more energy","Aerobic respiration releases much more energy from each glucose molecule."],
+ [2,"Yeast respires without oxygen. What does it produce?","Ethanol and carbon dioxide","Lactic acid","Water and oxygen","Glucose and oxygen","Anaerobic respiration in yeast (fermentation) makes ethanol and carbon dioxide."],
+ [2,"How is respiration different from breathing?","Respiration releases energy in cells; breathing moves air in and out","They are the same thing","Breathing happens in the mitochondria","Respiration only happens in the lungs","Breathing is gas exchange. Respiration is the chemical reaction that releases energy in cells."],
+ [2,"After a sprint you keep breathing heavily. Why?","To get extra oxygen to break down the lactic acid","To make more glucose","To stop respiring","To cool the lungs","The extra oxygen breaks down the lactic acid built up during anaerobic respiration."]]},
+{n:"Circuits and symbols",s:"Circuit components and complete circuits",i:"🔌",f:["symbols"],
+ tq:[["A circuit with no gaps, so that current can flow, is called a ... circuit.","complete|closed|complete circuit|closed circuit","open|broken|short","A complete (closed) circuit has no gaps."]],
+ mq:[[0,"What does a switch do in a circuit?","Opens or closes the circuit","Measures current","Gives energy to the circuit","Reduces the current","A switch breaks or completes the circuit."],
+ [0,"What is needed for a bulb to light?","A complete circuit with a cell or battery","A magnet","Two switches","An ammeter","Current only flows round a complete loop that includes a power source."],
+ [1,"A bulb does not light and all the components work. What is the most likely reason?","There is a gap in the circuit","The wire is too long","The battery is too strong","There is an ammeter in the circuit","A gap, such as an open switch, stops the current flowing."],
+ [1,"What does a cell or battery do in a circuit?","It supplies the energy that pushes the current round","It uses up the current","It measures potential difference","It stops the current","The cell or battery transfers chemical energy into electrical energy."],
+ [1,"Which component transfers electrical energy as light?","Bulb","Switch","Resistor","Wire","A bulb transfers electrical energy as light (and heat)."],
+ [2,"What is the difference between a cell and a battery?","A battery is two or more cells joined together","A cell is bigger than a battery","A battery has no chemicals","A cell supplies more energy","A battery is a group of cells."],
+ [2,"Why do we draw circuits using standard symbols?","They are quick to draw and everyone understands them","They show the real size of components","They show the colours of wires","They show the cost","Standard symbols make circuit diagrams easy to read and share."]]},
+{n:"Current and potential difference",s:"Series and parallel circuits, ammeters and voltmeters",i:"🔋",
+ tq:[["What is the unit of current?","amp|amps|ampere|amperes","volt|ohm|watt","Current is measured in amperes (amps)."],
+ ["What is the unit of potential difference?","volt|volts","amp|ohm|watt","Potential difference is measured in volts."],
+ ["Which meter measures potential difference?","voltmeter","ammeter|thermometer|ohmmeter","A voltmeter measures potential difference."],
+ ["Which meter measures current?","ammeter","voltmeter|thermometer|barometer","An ammeter measures current."]],
+ mq:[[0,"How is an ammeter connected in a circuit?","In series","In parallel","Across the cell only","It is not connected","An ammeter is placed in series so that the current flows through it."],
+ [0,"How is a voltmeter connected?","In parallel across a component","In series","In a gap in the wire","It is not connected","A voltmeter is connected in parallel across the component."],
+ [1,"In a series circuit, what happens if one bulb breaks?","All the bulbs go out","The other bulbs get brighter","Only the next bulb goes out","Nothing happens","There is only one path, so a break stops the current everywhere."],
+ [1,"In a parallel circuit, what happens if one bulb breaks?","The other bulbs stay lit","All the bulbs go out","The other bulbs go dimmer","The cell stops working","Each branch is separate, so the other branches keep working."],
+ [2,"Why are houses wired in parallel?","Each appliance can be switched on or off on its own","So the current is lower","To save wire","So that all appliances share the voltage","Parallel wiring gives each device the full voltage and independent control."],
+ [2,"What does potential difference tell you?","The energy transferred to each unit of charge between two points","How many electrons there are","How fast the current is","How long the wire is","Potential difference shows how much energy each unit of charge transfers."]],
+ g:[function(){var I=P([0.2,0.3,0.4,0.5,0.6]);return {q:"Two bulbs are in series with a cell. An ammeter before the bulbs reads "+I+" A. What does an ammeter placed after both bulbs read? (A)",a:""+I,sol:"In a series circuit the current is the same everywhere.",fig:figHTML(FG.series)};},
+ function(){if(Math.random()<.5){var V=P([3,6,9,12]);return {q:"A "+V+" V cell is connected to two identical bulbs in series. What is the potential difference across each bulb? (V)",a:f(V/2),sol:"In series the p.d. is shared. Identical bulbs share it equally: "+V+" ÷ 2.",fig:figHTML(FG.series)};}var I=P([0.4,0.6,0.8,1.2]);return {q:"An ammeter next to the cell reads "+I+" A. The current splits equally between two identical bulbs in parallel. What is the current through each bulb? (A)",a:f(I/2),sol:"In parallel the current splits between the branches: "+I+" ÷ 2.",fig:figHTML(FG.parallel)};},
+ function(){var r=R(0,2),a,b,V;if(r===0){V=P([9,12]);a=R(2,4);b=R(2,4);return {q:"A "+V+" V battery is connected to three bulbs in series. Voltmeters across bulbs A and B read "+a+" V and "+b+" V. What does a voltmeter across bulb C read? (V)",a:""+(V-a-b),sol:"The potential differences in a series circuit add up to the battery voltage: "+V+" − "+a+" − "+b+"."};}if(r===1){a=P([0.2,0.3,0.4]);b=P([0.5,0.6]);return {q:"In a parallel circuit, bulb A carries "+a+" A and bulb B carries "+b+" A. What current flows from the cell? (A)",a:f(a+b),sol:"The branch currents add up: "+a+" + "+b+" = "+f(a+b)+" A.",fig:figHTML(FG.parallel)};}a=P([0.3,0.4,0.5]);var T=P([0.8,0.9,1]);return {q:"The current from the cell is "+T+" A. Bulb A, in one branch of a parallel circuit, carries "+a+" A. What current flows through bulb B? (A)",a:f(T-a),sol:"The branch currents add up to the total, so B = "+T+" − "+a+".",fig:figHTML(FG.parallel)};}]},
+{n:"Static electricity",s:"Charge, forces and sparks",i:"✨",
+ tq:[["What type of charge do electrons carry?","negative|negative charge","positive|neutral|no charge","Electrons carry a negative charge."],
+ ["When two insulators are rubbed together, which particles move?","electrons","protons|neutrons|atoms","Electrons transfer from one material to the other. Protons stay in the nucleus."],
+ ["Objects with opposite charges ...","attract","repel|melt|spin","Opposite charges attract."],
+ ["Objects with the same charge ...","repel","attract|melt|spin","Like charges repel."]],
+ mq:[[0,"What do we call the build-up of electric charge on an object?","Static electricity","Current electricity","Magnetism","Gravity","Static electricity is charge that builds up on the surface of insulators."],[0,"Which of these will most easily become charged when rubbed?","A plastic comb","A copper wire","An iron nail","A steel spoon","Plastic is an insulator, so the charge stays on it. Metals let charge flow away."],[0,"How can a balloon become charged?","By rubbing it with a cloth","By heating it","By cutting it","By putting it in water","Rubbing transfers electrons, so the objects become charged."],
+ [1,"A plastic rod gains electrons when it is rubbed. What charge does it have?","Negative","Positive","No charge","Magnetic","Gaining negative electrons makes the rod negatively charged."],
+ [1,"A cloth loses electrons when it rubs a rod. What charge does the cloth have?","Positive","Negative","No charge","Magnetic","Losing electrons leaves more protons than electrons, so the cloth is positive."],
+ [1,"Why does a charged balloon stick to a wall?","It makes the wall surface charged oppositely, so they attract","The wall is magnetic","The balloon is sticky","Air pushes it onto the wall","The balloon repels electrons in the wall surface, leaving the surface opposite in charge near the balloon."],
+ [2,"Why might you get a small shock when you touch a car door?","Static charge built up by friction flows to earth through you","The door is hot","Magnets in the car","Electrons stop moving","Friction builds up charge, which discharges when you touch a conductor."],
+ [2,"What causes lightning?","Charge builds up in clouds and then discharges","Clouds hitting each other","Hot air exploding","Wind making electricity","Static charge builds up in clouds and discharges as a spark."],
+ [2,"Which materials are good insulators that can keep static charge?","Plastic and rubber","Copper and iron","Silver and gold","Salt water","Insulators do not let charge flow away easily."],
+ [2,"Why do clothes sometimes cling together after tumble drying?","Rubbing leaves them with opposite charges","They are magnetic","They are wet","They get heavier","Friction between the fabrics transfers electrons, so they attract."]]},
+{n:"Magnets and electromagnets",s:"Poles, fields and how electromagnets work",i:"🧲",f:["magnet","emag"],
+ tq:[["What is the region around a magnet where it can attract or repel called?","magnetic field|field","magnetic force|magnetic pole|magnetic line","The magnetic field is the region around a magnet where a magnetic force acts."],
+ ["Name a magnetic metal.","iron|steel|nickel|cobalt","copper|aluminium|gold","Iron, steel, nickel and cobalt are magnetic."]],
+ mq:[[0,"Which of these materials is magnetic?","Iron","Copper","Plastic","Aluminium","Iron, nickel and cobalt are magnetic materials."],
+ [0,"What happens when two north poles are brought together?","They repel","They attract","Nothing","They change poles","Like poles repel. Unlike poles attract."],
+ [0,"What happens when a north pole and a south pole meet?","They attract","They repel","Nothing","They spin","Unlike poles attract."],
+ [1,"What is the direction of the magnetic field lines outside a bar magnet?","From the north pole to the south pole","From the south pole to the north pole","Round and round inside the magnet only","There is no direction","Field lines point from north to south outside the magnet. Closer lines mean a stronger field."],
+ [1,"How can you make an electromagnet stronger?","Add more turns of wire","Use a plastic core","Reduce the current","Use a shorter wire","More turns, a bigger current and an iron core all make an electromagnet stronger."],
+ [1,"What is the best material for the core of an electromagnet?","Iron","Copper","Plastic","Wood","Iron is magnetic, so it strengthens the magnetic field."],
+ [1,"Why is an electromagnet useful for lifting scrap metal?","It can be switched off to drop the metal","It is always magnetic","It repels all metals","It only works with plastic","Switching off the current releases the load."],
+ [2,"Which change makes an electromagnet weaker?","Using a smaller current","Adding more coils","Adding an iron core","Using a stronger battery","A smaller current gives a weaker magnetic field."],
+ [2,"What does a compass needle do?","Lines up with the Earth's magnetic field","Points to the Sun","Points to the Moon","Points to the nearest magnet only","A compass needle is a small magnet that lines up with the Earth's magnetic field."],
+ [2,"What is around a wire when an electric current flows through it?","A magnetic field","A static charge","A heat shield","Nothing","An electric current always produces a magnetic field around it."]]}
+];
+var MODS=BANK.map(function(b){return [b.n,b.s,b.i];});
+function mcq(q,right,wrong,sol,fig){var o=shuf([right].concat(wrong));return {q:q,o:o,a:o.indexOf(right),sol:sol,fig:fig||""};}
+function pick3(a,d){var o=shuf(a),r=[],i;for(i=0;i<o.length&&r.length<3;i++)if(r.indexOf(cap(o[i]))<0)r.push(cap(o[i]));(d||[]).forEach(function(x){if(r.length<3&&r.indexOf(cap(x))<0)r.push(cap(x));});return r;}
+function pool(m,t){var M=BANK[m],p=[];
+ (M.f||[]).forEach(function(fn){var g=FG[fn];g.pts.forEach(function(pt,i){var nm=pt[4].split("|"),oth=g.pts.filter(function(x,j){return j!==i&&x[4].split("|").indexOf(nm[0])<0;}).map(function(x){return x[4].split("|")[0];}),q=(g.q||"Name part {n} of the "+g.t+".").replace("{n}",i+1),fg=figHTML(g,i);
+  if(t===0)p.push(mcq(q,cap(nm[0]),pick3(oth,g.d),pt[5],fg));else p.push({k:"t",q:q,a:nm,sol:pt[5],fig:fg,mask:t===1});});});
+ (M.tq||[]).forEach(function(x){var a=x[1].split("|");if(t===0)p.push(mcq(x[0],cap(a[0]),x[2].split("|").map(cap),x[3]));else p.push({k:"t",q:x[0],a:a,sol:x[3],fig:"",mask:false});});
+ (M.mq||[]).forEach(function(x){if(x[0]===t)p.push(mcq(x[1],x[2],[x[3],x[4],x[5]],x[6]));});
+ return p;}
+function build(m,t){var p=shuf(pool(m,t)),g=BANK[m].g&&BANK[m].g[t],ng=g?Math.min(NQ,Math.max(3,NQ-p.length)):0,l=p.slice(0,NQ-ng),seen={},n=0,q;
+ l.forEach(function(x){seen[x.q]=1;});
+ while(g&&l.length<NQ&&n++<200){q=g();if(!seen[q.q]){seen[q.q]=1;l.push(q);}}
+ l.forEach(function(x){x.m=m;x.t=t;});return shuf(l);}
+function one(m,t){var p=pool(m,t),g=BANK[m].g&&BANK[m].g[t],q=(g&&(!p.length||Math.random()<.3))?g():P(p);q.m=m;q.t=t;return q;}
+
+/* ---------- answer checking ---------- */
+function norm(s){return s.replace(/\s/g,"").replace(/\u2212/g,"-");}
+function pv(s){if(s.indexOf("/")>0){var p=s.split("/");return p.length===2&&+p[1]!==0&&!isNaN(+p[0])?+p[0]/+p[1]:NaN;}return s===""||isNaN(+s)?NaN:+s;}
+function eq(u,q){u=norm(u);var a=String(q.a),A,U,x;if(u===a)return true;if(q.x)return false;
+ if(a.indexOf(":")>0){A=a.split(":");U=u.split(":");return U.length===2&&!isNaN(+U[0])&&+U[1]!==0&&+U[0]*+A[1]===+A[0]*+U[1];}
+ x=pv(u);return !isNaN(x)&&Math.abs(x-pv(a))<1e-9;}
+/* ---------- sound ---------- */
+var AC=null,MG=null,MT=null,mNext=0,mStep=0;
+function ac(){try{if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();MG=AC.createDynamicsCompressor();MG.connect(AC.destination);}if(AC.state==="suspended")AC.resume();}catch(e){}return AC;}
+function tn(fq,t,d,v){if(S.mute||!ac())return;var o=AC.createOscillator(),g=AC.createGain(),s=AC.currentTime+t;o.frequency.value=fq;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(v,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(MG);o.start(s);o.stop(s+d+.05);}
+function sfx(k){if(k==="ok"){tn(784,0,.2,.45);tn(1175,.09,.3,.4);}else if(k==="no"){tn(240,0,.3,.4);tn(200,.2,.35,.35);}else{[523,659,784,1047].forEach(function(x,i){tn(x,i*.12,.5,.4);});}}
+var CH=[[131,165,196,247],[110,131,165,196],[87,110,131,165],[98,123,147,165]],ML=[0,0,659,0,0,784,0,0,0,659,0,587,0,523,0,0,0,0,523,0,0,659,0,440,0,0,784,0,659,0,587,0];
+function mt2(fq,at,d,type,v,att){var o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=fq;g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(v,at+att);g.gain.exponentialRampToValueAtTime(.0001,at+d);o.connect(g);g.connect(MG);o.start(at);o.stop(at+d+.05);}
+function msched(){if(!AC)return;while(mNext<AC.currentTime+1.5){var st=mStep,c=CH[(st/8)|0];if(st%8===0)c.forEach(function(fq){mt2(fq,mNext,3.6,"sine",.018,.9);});if(st%4===0)mt2(c[0],mNext,1.2,"triangle",.035,.05);if(ML[st])mt2(ML[st],mNext,1,"sine",.03,.03);mNext+=.4167;mStep=(mStep+1)%32;}}
+function msync(){if(!AC)return;if(S.nomusic){if(MT){clearInterval(MT);MT=null;}return;}if(!MT){mNext=AC.currentTime+.2;MT=setInterval(msched,300);}}
+document.addEventListener("pointerdown",function(){if(ac())msync();});
+document.addEventListener("visibilitychange",function(){if(!AC)return;if(document.hidden)AC.suspend();else AC.resume();});
+/* ---------- screens ---------- */
+function welcome(){
+ app.innerHTML='<h1>Science Studio</h1><p class="sub">Welcome! What is your name?</p><div class="card"><input id="nmi" maxlength="20" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start</button></div>';
+ $("go").onclick=function(){var v=$("nmi").value.trim();if(!v){$("nmi").focus();return;}S.name=v;save();home();};
+}
+function home(){
+ if(!S.name)return welcome();
+ var h='<h1>Hi '+esc(S.name)+'</h1><p class="sub">Choose a topic, or test yourself across everything.</p><div class="row2"><button class="btn" id="mx">'+(S.sess.x?"▶ Resume mixed":"🔀 Mixed review")+'</button><button class="btn alt" id="qc">'+(S.sess.q?"▶ Resume check":"🎯 Quick check")+'</button></div>';
+ MODS.forEach(function(m,i){var st=S.stat[i],acc=st&&st.n?Math.round(100*st.c/st.n)+"% correct so far":"not started";h+='<button class="mod" data-m="'+i+'"><span class="ic">'+m[2]+'</span><span><b>'+(i+1)+'. '+m[0]+'</b><small>'+m[1]+'</small><em>'+Math.min(S.prog[i],3)+' of 3 tiers unlocked · '+acc+'</em></span></button>';});
+ h+='<div class="foot"><button class="btn alt sm" id="par">Parent area</button> <button class="btn alt sm" id="mu">'+(S.mute?"🔇":"🔊")+'</button> <button class="btn alt sm" id="mm">'+(S.nomusic?"🔕":"🎵")+'</button></div>';
+ app.innerHTML=h;
+ app.querySelectorAll(".mod").forEach(function(b){b.onclick=function(){tiers(+b.dataset.m);};});
+ $("mx").onclick=startMix;$("qc").onclick=startQuick;$("par").onclick=gate;
+ $("mu").onclick=function(){S.mute=!S.mute;save();home();if(!S.mute)sfx("ok");};
+ $("mm").onclick=function(){S.nomusic=!S.nomusic;save();msync();home();};
+}
+function tiers(m){
+ var h='<h1>'+MODS[m][0]+'</h1><p class="sub">Score 80% or more to unlock the next tier.</p><div class="card" style="padding:8px 14px">';
+ for(var t=0;t<3;t++){var ok=t<S.prog[m],b=S.best[m+"_"+t],ss=S.sess["t"+m+"_"+t];h+='<button class="lvl" data-t="'+t+'"'+(ok?"":" disabled")+'><b>'+(ok?"":"🔒 ")+TN[t]+(ss&&ss.qi<ss.qs.length?'<small>▶ In progress ('+ss.qi+'/'+ss.qs.length+')</small>':b!=null?'<small>Best '+b+'%</small>':"")+'</b>'+TD[t]+'</button>';}
+ app.innerHTML=h+'</div><button class="btn alt" id="bk">◀ Back</button>';
+ app.querySelectorAll(".lvl").forEach(function(b){b.onclick=function(){startTier(m,+b.dataset.t);};});
+ $("bk").onclick=home;
+}
+function mk(){}
+function begin(k,m,t,list){ses={k:k,m:m,t:t,per:{}};qs=list;qi=0;sc=0;draw();}
+function skeyOf(k,m,t){return k==="t"?"t"+m+"_"+t:k;}
+function resume(k,m,t){var x=S.sess[skeyOf(k,m,t)];if(!x||!x.qs||!x.qs.length)return false;
+ ses={k:k,m:m,t:t,per:x.per||{}};qs=x.qs;sc=x.sc;qi=x.qi;
+ if(qi>=qs.length){finish();return true;}
+ if(!confirm("Continue where you stopped (question "+(qi+1)+" of "+qs.length+")?\n\nOK = continue, Cancel = start a new round.")){delete S.sess[skeyOf(k,m,t)];save();return false;}
+ draw();return true;}
+function startTier(m,t){if(resume("t",m,t))return;begin("t",m,t,build(m,t));}
+function startMix(){if(resume("x",0,0))return;var l=[],seen={},i,m,t,q,n=0;while(l.length<NQ&&n++<100){m=R(0,BANK.length-1);t=R(0,Math.min(S.prog[m],3)-1);q=one(m,t);if(!seen[q.q]){seen[q.q]=1;l.push(q);}}begin("x",0,0,l);}
+function startQuick(){if(resume("q",0,0))return;var l=[],m;for(m=0;m<BANK.length;m++){l.push(one(m,0));l.push(one(m,1));}begin("q",0,0,shuf(l));}
+function draw(){
+ var q=qs[qi],h,i;ent="";done=false;wait=false;clearTimeout(tmr);
+ h='<div class="top"><button class="btn alt sm" id="hm">🏠 Home</button><span><button class="btn alt sm tb" id="sp">✏️</button> <button class="btn alt sm tb" id="pc" style="display:none">Clear</button> <button class="btn alt sm tb" id="mm2">'+(S.nomusic?"🔕":"🎵")+'</button> <button class="btn alt sm tb" id="mt">'+(S.mute?"🔇":"🔊")+'</button></span></div>'+
+ '<div class="bar"><i style="width:'+(qi/qs.length*100)+'%"></i></div><div class="card"><div class="tag">'+(ses.k==="t"?TN[ses.t]:ses.k==="x"?"Mixed review":"Quick check")+' · Question '+(qi+1)+' of '+qs.length+' · '+MODS[q.m][0]+'</div>'+(q.fig||"")+'<div class="qt">'+q.q+'</div>';
+ if(q.o){for(i=0;i<q.o.length;i++)h+='<button class="opt" data-i="'+i+'">'+q.o[i]+'</button>';}
+ else if(q.k==="t"){h+=(q.mask?'<div class="mask">'+mask(q.a[0])+'</div>':"")+'<input id="ti" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Type your answer"><button class="btn" id="ok">Check</button>';}
+ else h+='<div id="ans"></div>';
+ h+='<div id="fb"></div></div><canvas id="pad"></canvas>';
+ if(!q.o&&q.k!=="t"){h+='<div id="kp">';["7","8","9","⌫","4","5","6","−","1","2","3","/",".","0",":","↵"].forEach(function(k){h+='<button data-k="'+k+'"'+(k==="↵"?' class="en"':k==="⌫"?' class="bk"':"")+'>'+k+'</button>';});h+='</div>';}
+ app.innerHTML=h;show();
+ app.querySelectorAll("#kp button").forEach(function(b){b.onclick=function(){key(b.dataset.k);};});
+ app.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){if(!done)grade(+b.dataset.i===q.a,+b.dataset.i);};});
+ var ti=$("ti");if(ti){ti.onkeydown=function(e){if(e.key==="Enter")subT();};$("ok").onclick=subT;ti.focus();}
+ $("sp").onclick=function(){padOn=!padOn;pad();};pad();
+ $("hm").onclick=function(){clearTimeout(tmr);home();};
+ $("mm2").onclick=function(){S.nomusic=!S.nomusic;save();this.textContent=S.nomusic?"🔕":"🎵";msync();};
+ $("mt").onclick=function(){S.mute=!S.mute;save();this.textContent=S.mute?"🔇":"🔊";if(!S.mute)sfx("ok");};
+ S.sess[skeyOf(ses.k,ses.m,ses.t)]={qs:qs,qi:qi,sc:sc,per:ses.per};save();
+}
+function subT(){if(done)return;var q=qs[qi],v=$("ti").value,r;if(!v.trim())return;r=chkT(v,q);grade(r>0,v,r===1?"Check the spelling: "+q.a[0]:"");}
+function pad(){
+ var c=$("pad");if(!c)return;$("pc").style.display=padOn?"inline-block":"none";c.style.display=padOn?"block":"none";if(!padOn)return;
+ c.width=c.clientWidth;c.height=c.clientHeight;var x=c.getContext("2d"),dn=false;x.lineWidth=3;x.lineCap="round";x.strokeStyle=getComputedStyle(document.body).color;
+ function pt(e){var b=c.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top];}
+ c.onpointerdown=function(e){dn=true;var p=pt(e);x.beginPath();x.moveTo(p[0],p[1]);try{c.setPointerCapture(e.pointerId);}catch(z){}};
+ c.onpointermove=function(e){if(!dn)return;var p=pt(e);x.lineTo(p[0],p[1]);x.stroke();};
+ c.onpointerup=function(){dn=false;};
+ $("pc").onclick=function(){x.clearRect(0,0,c.width,c.height);};
+}
+function show(){var a=$("ans");if(a)a.innerHTML=ent?esc(ent.replace(/-/g,"−")):'<span style="color:var(--mute);font-size:18px;font-weight:400">type your answer</span>';}
+function key(k){
+ if(wait){if(k==="↵")next();return;}if(done)return;
+ if(k==="⌫")ent=ent.slice(0,-1);else if(k==="↵"){if(ent!=="")grade(eq(ent,qs[qi]),ent);return;}else if(ent.length<12)ent+=(k==="−"?"-":k);
+ show();
+}
+function grade(ok,given,note){
+ var q=qs[qi],a=$("ans"),fb=$("fb"),ti=$("ti"),shown=q.o?q.o[q.a]:q.k==="t"?q.a[0]:String(q.a).replace(/-/g,"−"),st,pp;done=true;wait=true;
+ st=S.stat[q.m]=S.stat[q.m]||{n:0,c:0};st.n++;pp=ses.per[q.m]=ses.per[q.m]||{n:0,c:0};pp.n++;
+ if(q.o){app.querySelectorAll(".opt").forEach(function(b){if(+b.dataset.i===q.a)b.classList.add("good");else if(+b.dataset.i===given)b.classList.add("bad");});}
+ else if(ti){ti.disabled=true;ti.classList.add(ok?"good":"bad");$("ok").style.display="none";}
+ else a.classList.add(ok?"good":"bad");
+ if(ok){sc++;st.c++;pp.c++;sfx("ok");fb.innerHTML='<b style="color:var(--good)">Correct, '+esc(S.name)+'!</b>'+(note?'<div class="sol">'+esc(note)+'</div>':"")+(q.sol?'<div class="sol">'+q.sol+'</div>':"")+'<button class="btn alt sm" id="nx" style="margin-top:8px">Next ▶</button>';tmr=setTimeout(next,note?4200:3200);}
+ else{sfx("no");S.wrong.push({m:q.m,t:q.t,q:q.q,u:q.o?q.o[given]:String(given),c:shown,d:Date.now()});S.wrong=S.wrong.slice(-80);
+  fb.innerHTML='<div style="color:var(--bad)"><b>Not quite.</b> The answer is <b>'+shown+'</b></div><div class="sol">'+q.sol+'</div><button class="btn" id="nx">Next ▶</button>';}
+ $("nx").onclick=next;
+ S.sess[skeyOf(ses.k,ses.m,ses.t)]={qs:qs,qi:qi+1,sc:sc,per:ses.per};save();
+}
+function next(){clearTimeout(tmr);qi++;qi<qs.length?draw():finish();}
+function fmt(t){var d=new Date(t);return d.getDate()+"/"+(d.getMonth()+1)+" "+("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);}
+function finish(){
+ var n=qs.length,need=Math.ceil(.8*n),pc=Math.round(100*sc/n),h='<div class="card" style="margin-top:20px;text-align:center"><h1>'+sc+' out of '+n+'</h1>',pass=false,m;
+ if(ses.k==="t"){pass=sc>=need;m=ses.m;var bk=m+"_"+ses.t;if(S.best[bk]==null||pc>S.best[bk])S.best[bk]=pc;if(pass&&ses.t<2&&S.prog[m]<ses.t+2)S.prog[m]=ses.t+2;
+  h+=pass?'<p>Well done, '+esc(S.name)+'! '+(ses.t<2?TN[ses.t+1]+' is now open.':'You have completed every tier of this topic.')+'</p>':'<p>You need '+need+' out of '+n+' (80%) to move on. Read the explanations for the ones you missed and try again.</p>';
+  h+=(pass&&ses.t<2?'<button class="btn" id="nt">Next tier ▶</button><br>':'')+'<button class="btn alt" id="rt">Play again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
+ else{h+='<p>Results by topic:</p>';for(m in ses.per){var p=ses.per[m];h+='<div class="wr">'+MODS[m][0]+': <b>'+p.c+'/'+p.n+'</b>'+(p.c/p.n<.7?' · needs more practice':'')+'</div>';}h+='<button class="btn alt" id="rt">Go again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
+ delete S.sess[skeyOf(ses.k,ses.m,ses.t)];S.plays.push({k:ses.k,m:ses.m,t:ses.t,s:sc,n:n,d:Date.now()});S.plays=S.plays.slice(-60);save();
+ app.innerHTML=h;sfx(ses.k==="t"&&!pass?"no":"win");
+ if($("nt"))$("nt").onclick=function(){startTier(ses.m,ses.t+1);};
+ $("rt").onclick=function(){ses.k==="t"?startTier(ses.m,ses.t):ses.k==="x"?startMix():startQuick();};$("mn").onclick=home;
+}
+/* ---------- parent area ---------- */
+function gate(){
+ app.innerHTML='<h1>Parent area</h1><div class="card"><p>'+(S.pin?"Enter your 4-digit PIN":"Set a 4-digit PIN to protect this area")+'</p><input id="pn" type="password" inputmode="numeric" maxlength="4" placeholder="PIN"><button class="btn" id="gg">OK</button><div id="ge" style="color:var(--bad);min-height:22px;margin-top:8px"></div></div><button class="btn alt" id="bk">◀ Back</button>';
+ $("bk").onclick=home;
+ $("gg").onclick=function(){var v=$("pn").value;if(!/^\d{4}$/.test(v)){$("ge").textContent="Use exactly 4 digits";return;}if(!S.pin){S.pin=v;save();parent();}else if(v===S.pin)parent();else $("ge").textContent="Wrong PIN";};
+}
+function parent(){
+ var h='<h1>Progress: '+esc(S.name)+'</h1><div class="card"><h2>Accuracy and best scores</h2><table class="tbl"><tr><th></th><th>Acc.</th><th>Warm</th><th>Prac.</th><th>Chal.</th></tr>',i,t,s,b;
+ for(i=0;i<MODS.length;i++){s=S.stat[i];h+='<tr><td>'+(i+1)+'. '+MODS[i][0]+'</td><td>'+(s&&s.n?Math.round(100*s.c/s.n)+"%":"–")+'</td>';for(t=0;t<3;t++){b=S.best[i+"_"+t];h+='<td>'+(b!=null?b+"%":(t<S.prog[i]?"–":"🔒"))+'</td>';}h+='</tr>';}
+ h+='</table></div><div class="card"><h2>Recent mistakes</h2>';
+ var w=S.wrong.slice().reverse().slice(0,30);if(!w.length)h+='<p>None recorded yet.</p>';
+ w.forEach(function(x){h+='<div class="wr"><b>'+x.q+'</b> → correct '+x.c+', she wrote '+esc(x.u)+' <em>· '+MODS[x.m][0]+' · '+fmt(x.d)+'</em></div>';});
+ h+='</div><div class="card"><h2>Backup</h2><p style="font-size:13px;color:var(--mute)">Copy this code somewhere safe. Paste it on a new device to restore progress.</p><textarea id="bc" readonly></textarea><button class="btn alt sm" id="ex" style="margin-top:8px">Show backup code</button><textarea id="im" placeholder="Paste a backup code here" style="margin-top:10px"></textarea><button class="btn alt sm" id="rs" style="margin-top:8px">Restore from code</button><div id="bm" style="min-height:22px;margin-top:6px"></div></div>'+
+ '<div class="card"><button class="btn alt sm" id="cn">Change name</button> <button class="btn alt sm" id="rr">Reset all progress</button></div><button class="btn alt" id="bk">◀ Back</button>';
+ app.innerHTML=h;var arm=false;$("bk").onclick=home;
+ $("ex").onclick=function(){$("bc").value=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$("bc").select();};
+ $("rs").onclick=function(){try{var d=JSON.parse(decodeURIComponent(escape(atob($("im").value.trim()))));if(!d.prog||d.prog.length!==8)throw 0;d.sess=d.sess||{};S=d;save();$("bm").textContent="Restored.";setTimeout(home,700);}catch(e){$("bm").textContent="That code did not work.";}};
+ $("cn").onclick=function(){S.name="";save();welcome();};
+ $("rr").onclick=function(){if(!arm){arm=true;this.textContent="Tap again to confirm";}else{S=blank();save();welcome();}};
+}
+document.addEventListener("keydown",function(e){if(wait&&e.key==="Enter"){next();return;}if(!qs.length||!$("kp"))return;var k=e.key;if(/^[0-9./:]$/.test(k))key(k);else if(k==="-")key("−");else if(k==="Backspace")key("⌫");else if(k==="Enter")key("↵");});
+home();
+</script>
+</body>
+</html>
