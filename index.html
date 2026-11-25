@@ -45,14 +45,30 @@ textarea{height:70px;font-size:12px;text-align:left}
 .tx{font:600 10.5px Arial,sans-serif;fill:#1f2433;text-anchor:middle}.t2{font:700 22px Arial,sans-serif;fill:var(--ink);text-anchor:middle}.t3{font:600 13px Arial,sans-serif;fill:var(--ink);text-anchor:middle}
 .mask{text-align:center;font:700 22px "Courier New",monospace;letter-spacing:2px;margin:4px 0 10px;color:var(--mute)}
 input.good{border-color:var(--good)}input.bad{border-color:var(--bad)}#ti{margin-bottom:4px}
+.medal{position:relative;width:132px;height:132px;border-radius:50%;margin:10px auto 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;animation:mpop .9s cubic-bezier(.2,1.5,.4,1) both;box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 0 0 5px rgba(255,255,255,.4),inset 0 0 0 9px rgba(0,0,0,.12)}
+.medal.t1{background:conic-gradient(from 210deg,#c47a3a,#f0b27a,#a85c1e,#e5a064,#c47a3a)}
+.medal.t2{background:conic-gradient(from 210deg,#9aa5b1,#f4f6f7,#7b8794,#e3e8ec,#9aa5b1)}
+.medal.t3{background:conic-gradient(from 210deg,#d9a000,#fff1a0,#c88f00,#ffe27a,#d9a000);box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 0 0 5px rgba(255,255,255,.45),inset 0 0 0 9px rgba(0,0,0,.12),0 0 36px rgba(255,200,40,.55)}
+.medal.t0{background:var(--key);opacity:.55;animation:none;box-shadow:inset 0 0 0 4px rgba(0,0,0,.08)}
+.medal .mi{font-size:46px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.medal .mt{font:700 13px Arial,sans-serif;color:#2b2110;margin-top:4px;letter-spacing:.5px;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.medal.sm{width:78px;height:78px;margin:4px}.medal.sm .mi{font-size:30px}
+.mshine{position:absolute;top:-20%;left:-60%;width:36%;height:140%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);transform:skewX(-20deg);animation:msweep 2.4s ease-in-out .6s infinite}
+.medal.t0 .mshine{display:none}
+@keyframes msweep{0%{left:-60%}60%,100%{left:130%}}@keyframes mpop{from{transform:scale(0) rotate(-180deg)}to{transform:scale(1) rotate(0)}}
+.bn{font-weight:700;font-size:19px;margin-bottom:6px}
+.trow{display:flex;justify-content:center;gap:10px;margin-bottom:12px}.trow>div{text-align:center;font-size:12px;color:var(--mute)}
+.conf{position:fixed;left:0;right:0;top:0;bottom:0;pointer-events:none;overflow:hidden;z-index:50}
+.conf i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 </style>
 </head>
 <body><div id="app"></div>
 <script>
 var KEY="science_studio_v1",NQ=10;
 var TN=["Warm-up","Practice","Challenge"],TD=["Recall and label","Write the answer","Apply and explain"];
-function blank(){return {name:"",pin:"",mute:false,prog:[1,1,1,1,1,1,1,1],best:{},stat:{},wrong:[],plays:[],sess:{}};}
-function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.prog&&d.prog.length===8){d.best=d.best||{};d.stat=d.stat||{};d.wrong=d.wrong||[];d.plays=d.plays||[];d.sess=d.sess||{};return d;}}catch(e){}return blank();}
+function blank(){return {name:"",pin:"",mute:false,prog:[1,1,1,1,1,1,1,1],best:{},stat:{},wrong:[],plays:[],sess:{},badges:{}};}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.prog&&d.prog.length===8){d.best=d.best||{};d.stat=d.stat||{};d.wrong=d.wrong||[];d.plays=d.plays||[];d.sess=d.sess||{};d.badges=d.badges||{};return d;}}catch(e){}return blank();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var S=load(),app=document.getElementById("app"),qs=[],qi=0,sc=0,ent="",done=false,wait=false,ses={},padOn=false,tmr=null;
 function $(i){return document.getElementById(i);}
@@ -218,6 +234,15 @@ function msched(){if(!AC)return;while(mNext<AC.currentTime+1.5){var st=mStep,c=C
 function msync(){if(!AC)return;if(S.nomusic){if(MT){clearInterval(MT);MT=null;}return;}if(!MT){mNext=AC.currentTime+.2;MT=setInterval(msched,300);}}
 document.addEventListener("pointerdown",function(){if(ac())msync();});
 document.addEventListener("visibilitychange",function(){if(!AC)return;if(document.hidden)AC.suspend();else AC.resume();});
+var streak=0,TN2=["","Bronze","Silver","Gold"];
+function confetti(){var w=document.createElement("div");w.className="conf";var cs=["#ffd23f","#2dd4bf","#818cf8","#f472b6","#4ade80","#fb923c"],i,p;
+ for(i=0;i<45;i++){p=document.createElement("i");p.style.left=R(0,100)+"%";p.style.background=cs[R(0,5)];p.style.animationDuration=(2.2+Math.random()*2)+"s";p.style.animationDelay=(Math.random()*.6)+"s";p.style.transform="rotate("+R(0,360)+"deg)";w.appendChild(p);}
+ document.body.appendChild(w);setTimeout(function(){w.remove();},5000);}
+function medalHTML(t,m,l,sm){return '<div class="medal t'+t+(sm?' sm':'')+'"><i class="mshine"></i><span class="mi">'+(t?MODS[m][2]:"?")+'</span><span class="mt">'+(sm?"":TN[l])+'</span></div>';}
+function trophies(){var h,m,l,t,n=0,k;for(k in S.badges)if(S.badges[k]>0)n++;
+ h='<h1>My trophies 🏆</h1><p class="sub">'+n+' of '+MODS.length*3+' medals earned · Bronze 80% · Silver 90% · Gold 100%</p><div class="card">';
+ for(m=0;m<MODS.length;m++){h+='<h2>'+(m+1)+'. '+MODS[m][0]+'</h2><div class="trow">';for(l=0;l<3;l++){t=S.badges[m+"_"+l]||0;h+='<div>'+medalHTML(t,m,l,true)+(t?TN2[t]:TN[l])+'</div>';}h+='</div>';}
+ app.innerHTML=h+'</div><button class="btn alt" id="bk">◀ Back</button>';$("bk").onclick=home;}
 /* ---------- screens ---------- */
 function welcome(){
  app.innerHTML='<h1>Science Studio</h1><p class="sub">Welcome! What is your name?</p><div class="card"><input id="nmi" maxlength="20" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start</button></div>';
@@ -227,10 +252,10 @@ function home(){
  if(!S.name)return welcome();
  var h='<h1>Hi '+esc(S.name)+'</h1><p class="sub">Choose a topic, or test yourself across everything.</p><div class="row2"><button class="btn" id="mx">'+(S.sess.x?"▶ Resume mixed":"🔀 Mixed review")+'</button><button class="btn alt" id="qc">'+(S.sess.q?"▶ Resume check":"🎯 Quick check")+'</button></div>';
  MODS.forEach(function(m,i){var st=S.stat[i],acc=st&&st.n?Math.round(100*st.c/st.n)+"% correct so far":"not started";h+='<button class="mod" data-m="'+i+'"><span class="ic">'+m[2]+'</span><span><b>'+(i+1)+'. '+m[0]+'</b><small>'+m[1]+'</small><em>'+Math.min(S.prog[i],3)+' of 3 tiers unlocked · '+acc+'</em></span></button>';});
- h+='<div class="foot"><button class="btn alt sm" id="par">Parent area</button> <button class="btn alt sm" id="mu">'+(S.mute?"🔇":"🔊")+'</button> <button class="btn alt sm" id="mm">'+(S.nomusic?"🔕":"🎵")+'</button></div>';
+ h+='<div class="foot"><button class="btn alt sm" id="tr">🏆 Trophies</button> <button class="btn alt sm" id="par">Parent area</button> <button class="btn alt sm" id="mu">'+(S.mute?"🔇":"🔊")+'</button> <button class="btn alt sm" id="mm">'+(S.nomusic?"🔕":"🎵")+'</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".mod").forEach(function(b){b.onclick=function(){tiers(+b.dataset.m);};});
- $("mx").onclick=startMix;$("qc").onclick=startQuick;$("par").onclick=gate;
+ $("mx").onclick=startMix;$("qc").onclick=startQuick;$("par").onclick=gate;$("tr").onclick=trophies;
  $("mu").onclick=function(){S.mute=!S.mute;save();home();if(!S.mute)sfx("ok");};
  $("mm").onclick=function(){S.nomusic=!S.nomusic;save();msync();home();};
 }
@@ -242,10 +267,10 @@ function tiers(m){
  $("bk").onclick=home;
 }
 function mk(){}
-function begin(k,m,t,list){ses={k:k,m:m,t:t,per:{}};qs=list;qi=0;sc=0;draw();}
+function begin(k,m,t,list){streak=0;ses={k:k,m:m,t:t,per:{}};qs=list;qi=0;sc=0;draw();}
 function skeyOf(k,m,t){return k==="t"?"t"+m+"_"+t:k;}
 function resume(k,m,t){var x=S.sess[skeyOf(k,m,t)];if(!x||!x.qs||!x.qs.length)return false;
- ses={k:k,m:m,t:t,per:x.per||{}};qs=x.qs;sc=x.sc;qi=x.qi;
+ streak=0;ses={k:k,m:m,t:t,per:x.per||{}};qs=x.qs;sc=x.sc;qi=x.qi;
  if(qi>=qs.length){finish();return true;}
  if(!confirm("Continue where you stopped (question "+(qi+1)+" of "+qs.length+")?\n\nOK = continue, Cancel = start a new round.")){delete S.sess[skeyOf(k,m,t)];save();return false;}
  draw();return true;}
@@ -293,8 +318,8 @@ function grade(ok,given,note){
  if(q.o){app.querySelectorAll(".opt").forEach(function(b){if(+b.dataset.i===q.a)b.classList.add("good");else if(+b.dataset.i===given)b.classList.add("bad");});}
  else if(ti){ti.disabled=true;ti.classList.add(ok?"good":"bad");$("ok").style.display="none";}
  else a.classList.add(ok?"good":"bad");
- if(ok){sc++;st.c++;pp.c++;sfx("ok");fb.innerHTML='<b style="color:var(--good)">Correct, '+esc(S.name)+'!</b>'+(note?'<div class="sol">'+esc(note)+'</div>':"")+(q.sol?'<div class="sol">'+q.sol+'</div>':"")+'<button class="btn alt sm" id="nx" style="margin-top:8px">Next ▶</button>';tmr=setTimeout(next,note?4200:3200);}
- else{sfx("no");S.wrong.push({m:q.m,t:q.t,q:q.q,u:q.o?q.o[given]:String(given),c:shown,d:Date.now()});S.wrong=S.wrong.slice(-80);
+ if(ok){sc++;streak++;st.c++;pp.c++;sfx("ok");fb.innerHTML='<b style="color:var(--good)">Correct, '+esc(S.name)+'!'+(streak>=3?' 🔥 '+streak+' in a row':'')+'</b>'+(note?'<div class="sol">'+esc(note)+'</div>':"")+(q.sol?'<div class="sol">'+q.sol+'</div>':"")+'<button class="btn alt sm" id="nx" style="margin-top:8px">Next ▶</button>';tmr=setTimeout(next,note?4200:3200);}
+ else{streak=0;sfx("no");S.wrong.push({m:q.m,t:q.t,q:q.q,u:q.o?q.o[given]:String(given),c:shown,d:Date.now()});S.wrong=S.wrong.slice(-80);
   fb.innerHTML='<div style="color:var(--bad)"><b>Not quite.</b> The answer is <b>'+shown+'</b></div><div class="sol">'+q.sol+'</div><button class="btn" id="nx">Next ▶</button>';}
  $("nx").onclick=next;
  S.sess[skeyOf(ses.k,ses.m,ses.t)]={qs:qs,qi:qi+1,sc:sc,per:ses.per};save();
@@ -304,11 +329,12 @@ function fmt(t){var d=new Date(t);return d.getDate()+"/"+(d.getMonth()+1)+" "+("
 function finish(){
  var n=qs.length,need=Math.ceil(.8*n),pc=Math.round(100*sc/n),h='<div class="card" style="margin-top:20px;text-align:center"><h1>'+sc+' out of '+n+'</h1>',pass=false,m;
  if(ses.k==="t"){pass=sc>=need;m=ses.m;var bk=m+"_"+ses.t;if(S.best[bk]==null||pc>S.best[bk])S.best[bk]=pc;if(pass&&ses.t<2&&S.prog[m]<ses.t+2)S.prog[m]=ses.t+2;
+  var tier=pass?(sc>=n?3:(100*sc/n>=90?2:1)):0,old=S.badges[bk]||0;if(tier>old)S.badges[bk]=tier;if(pass)h+=medalHTML(tier,m,ses.t)+'<div class="bn">'+TN2[tier]+' medal'+(tier>old?' · NEW!':'')+'</div>';
   h+=pass?'<p>Well done, '+esc(S.name)+'! '+(ses.t<2?TN[ses.t+1]+' is now open.':'You have completed every tier of this topic.')+'</p>':'<p>You need '+need+' out of '+n+' (80%) to move on. Read the explanations for the ones you missed and try again.</p>';
   h+=(pass&&ses.t<2?'<button class="btn" id="nt">Next tier ▶</button><br>':'')+'<button class="btn alt" id="rt">Play again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
  else{h+='<p>Results by topic:</p>';for(m in ses.per){var p=ses.per[m];h+='<div class="wr">'+MODS[m][0]+': <b>'+p.c+'/'+p.n+'</b>'+(p.c/p.n<.7?' · needs more practice':'')+'</div>';}h+='<button class="btn alt" id="rt">Go again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
  delete S.sess[skeyOf(ses.k,ses.m,ses.t)];S.plays.push({k:ses.k,m:ses.m,t:ses.t,s:sc,n:n,d:Date.now()});S.plays=S.plays.slice(-60);save();
- app.innerHTML=h;sfx(ses.k==="t"&&!pass?"no":"win");
+ app.innerHTML=h;sfx(ses.k==="t"&&!pass?"no":"win");if(ses.k==="t"&&pass)setTimeout(confetti,250);
  if($("nt"))$("nt").onclick=function(){startTier(ses.m,ses.t+1);};
  $("rt").onclick=function(){ses.k==="t"?startTier(ses.m,ses.t):ses.k==="x"?startMix():startQuick();};$("mn").onclick=home;
 }
@@ -328,7 +354,7 @@ function parent(){
  '<div class="card"><button class="btn alt sm" id="cn">Change name</button> <button class="btn alt sm" id="rr">Reset all progress</button></div><button class="btn alt" id="bk">◀ Back</button>';
  app.innerHTML=h;var arm=false;$("bk").onclick=home;
  $("ex").onclick=function(){$("bc").value=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$("bc").select();};
- $("rs").onclick=function(){try{var d=JSON.parse(decodeURIComponent(escape(atob($("im").value.trim()))));if(!d.prog||d.prog.length!==8)throw 0;d.sess=d.sess||{};S=d;save();$("bm").textContent="Restored.";setTimeout(home,700);}catch(e){$("bm").textContent="That code did not work.";}};
+ $("rs").onclick=function(){try{var d=JSON.parse(decodeURIComponent(escape(atob($("im").value.trim()))));if(!d.prog||d.prog.length!==8)throw 0;d.sess=d.sess||{};d.badges=d.badges||{};S=d;save();$("bm").textContent="Restored.";setTimeout(home,700);}catch(e){$("bm").textContent="That code did not work.";}};
  $("cn").onclick=function(){S.name="";save();welcome();};
  $("rr").onclick=function(){if(!arm){arm=true;this.textContent="Tap again to confirm";}else{S=blank();save();welcome();}};
 }
