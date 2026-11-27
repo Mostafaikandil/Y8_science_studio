@@ -66,9 +66,9 @@ input.good{border-color:var(--good)}input.bad{border-color:var(--bad)}#ti{margin
 <body><div id="app"></div>
 <script>
 var KEY="science_studio_v1",NQ=10;
-var TN=["Warm-up","Practice","Challenge"],TD=["Recall and label","Write the answer","Apply and explain"];
-function blank(){return {name:"",pin:"",mute:false,prog:[1,1,1,1,1,1,1,1],best:{},stat:{},wrong:[],plays:[],sess:{},badges:{}};}
-function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.prog&&d.prog.length===8){d.best=d.best||{};d.stat=d.stat||{};d.wrong=d.wrong||[];d.plays=d.plays||[];d.sess=d.sess||{};d.badges=d.badges||{};return d;}}catch(e){}return blank();}
+var TN=["Warm-up","Practice","Challenge","Expert"],TD=["Recall and label","Write the answer","Apply and explain","Exam-style questions"];
+function blank(){return {name:"",pin:"",mute:false,prog:[1,1,1,1,1,1,1,1],best:{},stat:{},wrong:[],plays:[],sess:{},badges:{},seen:{}};}
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&d.prog&&d.prog.length===8){d.best=d.best||{};d.stat=d.stat||{};d.wrong=d.wrong||[];d.plays=d.plays||[];d.sess=d.sess||{};d.badges=d.badges||{};d.seen=d.seen||{};for(var i=0;i<8;i++)if((d.best[i+"_2"]||0)>=80&&d.prog[i]<4)d.prog[i]=4;return d;}}catch(e){}return blank();}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 var S=load(),app=document.getElementById("app"),qs=[],qi=0,sc=0,ent="",done=false,wait=false,ses={},padOn=false,tmr=null;
 function $(i){return document.getElementById(i);}
@@ -203,20 +203,213 @@ var BANK=[
  [2,"What is around a wire when an electric current flows through it?","A magnetic field","A static charge","A heat shield","Nothing","An electric current always produces a magnetic field around it."]]}
 ];
 var MODS=BANK.map(function(b){return [b.n,b.s,b.i];});
+function ADD(m,o){var b=BANK[m];["tq","mq"].forEach(function(k){if(o[k])b[k]=(b[k]||[]).concat(o[k]);});if(o.g){b.g=b.g||[];for(var k in o.g)b.g[k]=o.g[k];}}
+ADD(0,{tq:[["What do we call the process of making an image look bigger?","magnification","resolution|reflection|refraction","Magnification is how many times bigger the image is than the real object."],
+ ["Which unit is one thousandth of a millimetre?","micrometre|micrometer|micron|µm","millimetre|nanometre|centimetre","1 micrometre (µm) = 0.001 mm."],
+ ["Which knob should you use to focus a high-power lens?","fine focus knob|fine focus|fine adjustment knob","coarse focus knob|stage|arm","With a high-power lens use only the fine focus knob, so the lens does not hit the slide."],
+ ["What is the name for the sample being looked at under a microscope?","specimen|sample","lens|stain|stage","The specimen is the thing being observed."]],
+ mq:[[1,"A student sees a clear image at ×100 but wants more detail. What should she change?","Switch to a higher-power objective lens","Move the light source away","Remove the cover slip","Turn off the lamp","A higher-power objective gives greater magnification."],
+ [1,"Why should you not use the coarse focus knob with a high-power lens?","The lens could hit and break the slide","It changes the colour of the image","It turns off the light","It stains the cell","The coarse focus moves a large distance, so the lens could crash into the slide."],
+ [2,"Why do onion cells show up more clearly when stained with iodine?","The stain colours the nucleus and other parts so they stand out","Iodine makes the cells larger","Iodine adds light","Iodine dissolves the cell wall","Stains add contrast to almost transparent cell parts."],
+ [2,"Why are air bubbles easy to mistake for cells but easy to spot with care?","They are round with thick dark edges and no structure inside","They are always bigger than cells","They reflect no light","They contain a nucleus","Air bubbles have thick black outlines and no nucleus or other cell parts."],
+ [3,"A student wants the real size of a cell from a photograph. Which method is correct?","Measure the image and divide by the magnification","Measure the image and multiply by the magnification","Count the cells and divide by two","Add the eyepiece and objective magnifications","Real size = image size ÷ magnification."],
+ [3,"Which statement about resolution is correct?","Higher resolution means two close points can be seen as separate","Resolution is the same as magnification","Resolution is how bright the image is","Resolution depends only on the eyepiece","Resolution is the ability to show fine detail."],
+ [3,"Why can a light microscope not show ribosomes?","Ribosomes are too small to be resolved using light","Ribosomes are transparent","Ribosomes are inside the nucleus","Ribosomes move too quickly","An electron microscope is needed to see structures that small."],
+ [3,"Which type of microscope gives the highest magnification and resolution?","Electron microscope","Light microscope","Hand lens","Magnifying glass","Electron microscopes use beams of electrons and show far smaller structures."],
+ [3,"Why is the specimen found under low power before higher power is used?","Low power gives a wide view, so the specimen can be found and centred","Low power gives a brighter lamp","Low power magnifies more","Low power stains the slide","A wide field of view makes the specimen easy to locate."],
+ [3,"A student uses ×10 eyepiece and ×40 objective lenses. She switches to a ×10 objective lens. What happens to the total magnification?","It falls from ×400 to ×100","It rises from ×100 to ×400","It stays at ×400","It falls to ×10","Total magnification = eyepiece × objective."]],
+ g:{3:function(){var r=R(0,2),M,I,u,L,k,S2;if(r===0){u=P([10,20,25,40,50,80,100]);M=P([50,100,200,400]);I=u*M/1000;return {q:"A cell is "+u+" µm long. It is viewed at ×"+M+". How long is the image? (mm)",a:f(I),sol:"Image size = real size × magnification. "+u+" µm = "+f(u/1000)+" mm, and "+f(u/1000)+" × "+M+" = "+f(I)+" mm."};}
+ if(r===1){u=P([10,20,25,40,50,80]);M=P([100,200,400]);I=u*M/1000;return {q:"A cell appears "+f(I)+" mm long in an image at ×"+M+". How long is the real cell in micrometres? (µm)",a:""+u,sol:"Real size = image size ÷ magnification = "+f(I)+" ÷ "+M+" = "+f(I/M)+" mm = "+u+" µm."};}
+ S2=P([10,20,50,100]);L=P([5,10,20]);k=R(2,6);return {q:"A scale bar on a photograph is "+L+" mm long and represents "+S2+" µm. A cell on the photograph is "+L*k+" mm long. How long is the real cell? (µm)",a:""+S2*k,sol:"The cell is "+k+" times as long as the scale bar, so it is "+k+" × "+S2+" = "+S2*k+" µm."};}}});
+ADD(1,{tq:[["Name one structure found in plant cells but not in animal cells.","cell wall|chloroplast|chloroplasts|vacuole|permanent vacuole","nucleus|cytoplasm|mitochondria","Plant cells have a cell wall, chloroplasts and a permanent vacuole."],
+ ["What is the green substance in chloroplasts that absorbs light?","chlorophyll","chlorine|glucose|starch","Chlorophyll absorbs light energy for photosynthesis."],
+ ["What is the cell wall of a plant cell made from?","cellulose","protein|starch|fat","Cell walls are made from cellulose fibres."],
+ ["What do we call cells that are adapted to do a particular job?","specialised|specialised cells|specialized","identical|simple|basic","Specialised cells have features that suit their function."],
+ ["Which specialised cell has a tail to swim to the egg?","sperm cell|sperm","red blood cell|nerve cell|root hair cell","A sperm cell has a tail and many mitochondria for swimming."],
+ ["Which specialised cell carries oxygen around the body?","red blood cell|red blood cells","white blood cell|nerve cell|sperm cell","Red blood cells contain haemoglobin and carry oxygen."],
+ ["Which specialised cell carries electrical impulses?","nerve cell|neurone|neuron","muscle cell|red blood cell|root hair cell","Nerve cells (neurones) carry electrical signals."],
+ ["Which specialised plant cell takes in water and minerals?","root hair cell|root hair cells","palisade cell|guard cell|xylem","Root hair cells have a large surface area for absorbing water and minerals."]],
+ mq:[[1,"A red blood cell has no nucleus. What is the advantage?","There is more room to carry oxygen","It can divide faster","It can make more protein","It can photosynthesise","No nucleus leaves more space for haemoglobin."],
+ [1,"Which feature helps a root hair cell absorb water?","A long thin extension giving a large surface area","Many chloroplasts","A tail","A thick layer of fat","The root hair increases the surface area."],
+ [2,"Why do sperm cells contain many mitochondria?","They release energy for swimming","They store food","They make light","They make proteins for the egg","Swimming needs lots of energy from respiration."],
+ [2,"Which structure would you expect to find more of in a cell that makes lots of protein?","Ribosomes","Chloroplasts","Cell walls","Vacuoles","Ribosomes make proteins."],
+ [3,"Nerve cells are long and thin with branches. How does this help them?","They can carry signals over long distances to many cells","They can photosynthesise","They can absorb water","They are stronger","The long shape carries impulses far, and branches connect to other cells."],
+ [3,"Why is the cell membrane described as partially permeable?","It lets some substances through but not others","It lets everything through","It blocks every substance","It only lets water out","The membrane controls which substances pass."],
+ [3,"Why can plant cells stay firm when full of water, but animal cells may burst?","The rigid cell wall resists the pressure","Plant cells have no membrane","Plant cells have no nucleus","Plant cells lose water faster","The cell wall holds the shape and stops bursting."],
+ [3,"Which cell part is the site of protein synthesis?","Ribosomes","Nucleus","Mitochondria","Cell wall","Ribosomes assemble proteins using instructions copied from DNA."],
+ [3,"Which statement about a bacterial cell is correct?","Its DNA is in the cytoplasm, not in a nucleus","It has a nucleus","It has chloroplasts","It has no cell wall","Bacteria have no true nucleus."],
+ [3,"Which pair is matched correctly?","Mitochondria and releasing energy","Chloroplasts and making protein","Ribosomes and absorbing light","Vacuole and controlling the cell","Mitochondria release energy in respiration."],
+ [3,"Why are the cells lining the small intestine folded on their surface?","To increase the surface area for absorption","To make them rigid","To release energy","To stop food entering","A larger surface area absorbs digested food faster."],
+ [3,"Which would be the best evidence that a cell is a plant cell?","It contains chloroplasts","It contains cytoplasm","It has a membrane","It has ribosomes","Of these, only plant cells contain chloroplasts."]],
+ g:{2:function(){var w=P([0.01,0.02,0.04,0.05]),L=P([1,2,4]);return {q:"A row of cells each "+w+" mm wide is laid end to end. How many cells fit in "+L+" mm?",a:f(L/w),sol:"Number of cells = length ÷ width = "+L+" ÷ "+w+" = "+f(L/w)+"."};},
+ 3:function(){var a=P([0.02,0.05,0.1,0.2]),M=P([50,100,200,400]);return {q:"A cell is really "+a+" mm wide. In a drawing it is "+f(a*M)+" mm wide. What is the magnification of the drawing? (×)",a:""+M,sol:"Magnification = image size ÷ real size = "+f(a*M)+" ÷ "+a+" = ×"+M+"."};}}});
+ADD(2,{tq:[["The basic unit of all living things is the ...","cell","tissue|organ|atom","Cells are the basic building blocks of life."],
+ ["A whole living thing, such as a human, is called an ...","organism","organ|tissue|cell","An organism is a complete living thing."],
+ ["Which organ system breaks down food?","digestive system|digestive","circulatory system|nervous system|respiratory system","The digestive system breaks food into small molecules."],
+ ["Which organ system transports blood around the body?","circulatory system|circulatory","digestive system|nervous system|skeletal system","The circulatory system carries blood."],
+ ["Which organ system takes oxygen into the body?","respiratory system|respiratory","digestive system|circulatory system|excretory system","The respiratory system takes in oxygen and removes carbon dioxide."],
+ ["Which tissue contracts to produce movement?","muscle tissue|muscle|muscular tissue","nerve tissue|bone|epithelial tissue","Muscle tissue contracts to move the body."],
+ ["Which tissue carries electrical impulses?","nervous tissue|nerve tissue|nerve","muscle tissue|glandular tissue|bone","Nervous tissue carries signals."]],
+ mq:[[1,"Which organ is part of the respiratory system?","Lungs","Stomach","Heart","Liver","The lungs exchange oxygen and carbon dioxide."],
+ [1,"Which tissues does the stomach contain?","Muscle, glandular and epithelial tissue","Only bone","Only nerve tissue","Only blood","The stomach is an organ made of several tissue types."],
+ [2,"What is the main job of the circulatory system?","Transporting substances around the body","Breaking down food","Controlling movement","Making glucose","Blood vessels carry oxygen, nutrients and waste."],
+ [2,"Why is blood classed as a tissue?","It is a group of different cells and plasma working together","It is a single cell","It is an organ","It is a gas","Blood is a tissue made of several cell types in a liquid."],
+ [3,"The pancreas makes enzymes and hormones. Why is it an organ?","It is made of different tissues working together","It is made of one cell type","It is a single cell","It is a whole organism","An organ contains several tissues."],
+ [3,"Which of these is NOT part of the digestive system?","Lungs","Liver","Small intestine","Oesophagus","The lungs belong to the respiratory system."],
+ [3,"Why would damage to nervous tissue affect many organs?","Nerves carry signals that control organs and muscles","Nerves carry food","Nerves carry oxygen","Nerves digest food","Nervous tissue coordinates the body."],
+ [3,"Which statement links structure to function correctly?","Muscle cells have many mitochondria to release energy for contraction","Red blood cells have a large nucleus to carry oxygen","Root hair cells contain many chloroplasts","Nerve cells have a hard cell wall","Muscle contraction needs a lot of energy."],
+ [3,"What is an advantage of organ systems in large organisms?","Different parts specialise, so jobs are done more efficiently","Cells no longer need energy","Diffusion alone supplies every cell","The organism needs fewer cells","Specialisation makes the whole organism more efficient."],
+ [3,"Why can a single-celled organism survive without organ systems?","Substances can diffuse directly in and out of the one cell","It has no cell membrane","It does not respire","It is always a plant","A small cell has a large surface area compared with its volume."],
+ [3,"Which has the most levels of organisation?","A human","A bacterium","An amoeba","A virus particle","A human has cells, tissues, organs, organ systems and the whole organism."],
+ [3,"A plant root is made of several tissues. At which level is the root?","Organ","Cell","Organ system","Organism","A root is an organ of the plant."],
+ [3,"A scientist studies how the heart pumps blood. Which level is she studying?","Organ","Cell","Tissue","Organism","The heart is an organ."]]});
+ADD(3,{tq:[["What acid builds up in muscles during anaerobic respiration?","lactic acid","citric acid|hydrochloric acid|carbonic acid","Lactic acid builds up when muscles respire without enough oxygen."],
+ ["What alcohol does yeast make when it respires without oxygen?","ethanol|alcohol","glucose|lactic acid|oxygen","Yeast makes ethanol and carbon dioxide."],
+ ["What process in yeast makes bread dough rise?","fermentation|anaerobic respiration","photosynthesis|digestion|evaporation","Fermentation makes carbon dioxide gas, which makes the dough rise."],
+ ["What do we call the chemical reaction that releases energy from food in cells?","respiration","digestion|photosynthesis|evaporation","Respiration releases energy from glucose."],
+ ["Which chemical turns cloudy when carbon dioxide is bubbled through it?","limewater","litmus|universal indicator|iodine","Limewater turns cloudy in the presence of carbon dioxide."],
+ ["Which gas produced by yeast makes bread rise?","carbon dioxide","oxygen|hydrogen|nitrogen","Yeast gives off carbon dioxide."],
+ ["What happens to the amount of oxygen in exhaled air compared with inhaled air?","it decreases|decreases|less|lower","it increases|it stays the same|it doubles","Some oxygen is used up in respiration, so exhaled air has less."]],
+ mq:[[1,"Which of these processes needs energy released by respiration?","Muscle contraction","Evaporation of water","Rusting of iron","Melting of ice","Cells use energy from respiration for movement."],
+ [1,"What happens to the heart rate during exercise?","It increases to deliver more oxygen and glucose","It decreases","It stops","It stays the same","A faster heart rate delivers more oxygen and glucose to muscles."],
+ [2,"A student breathes out onto limewater and it turns cloudy. What does this show?","Carbon dioxide is present in exhaled air","Oxygen is present","Water is present","Nitrogen is present","Limewater turns cloudy with carbon dioxide."],
+ [2,"Germinating peas are kept in a sealed flask. Why does the temperature rise?","Respiration releases some energy as heat","Photosynthesis releases heat","The peas absorb heat","Oxygen heats the flask","Some of the energy from respiration is released as heat."],
+ [2,"Why do plants respire as well as photosynthesise?","They need energy released from glucose all the time","They only respire at night","Respiration makes oxygen","Photosynthesis uses up energy","Plants respire day and night to release energy."],
+ [3,"Which is the balanced symbol equation for aerobic respiration?","C6H12O6 + 6O2 → 6CO2 + 6H2O","C6H12O6 → 2C2H5OH + 2CO2","6CO2 + 6H2O → C6H12O6 + 6O2","C6H12O6 + 6CO2 → 6O2 + 6H2O","Glucose and oxygen react to give carbon dioxide and water."],
+ [3,"Why does anaerobic respiration release less energy than aerobic respiration?","The glucose is only partly broken down","It uses more oxygen","It happens in the nucleus","It makes more water","Without oxygen the glucose is not fully broken down."],
+ [3,"Why does a sprinter keep breathing heavily after a race?","To get extra oxygen to break down lactic acid","Because the lungs are damaged","To make glucose","To stop respiring","The oxygen debt is repaid by breathing heavily."],
+ [3,"A graph shows breathing rate falling slowly after exercise. What explains the slow fall?","Lactic acid still needs to be broken down using oxygen","The lungs have run out of oxygen","Oxygen is made in the muscles","The heart makes carbon dioxide","The oxygen debt keeps the breathing rate high for a while."],
+ [3,"Yeast and sugar solution are sealed in a flask with a balloon over the top. What happens?","The balloon inflates as carbon dioxide forms","The balloon shrinks","Oxygen fills the balloon","Nothing happens","Fermentation produces carbon dioxide."],
+ [3,"Why does a marathon runner rely mainly on aerobic respiration?","It releases much more energy and does not build up lactic acid","It needs no oxygen","It is faster than anaerobic respiration","It only happens in the lungs","Aerobic respiration can supply energy for a long time."],
+ [3,"Which statement about breathing and respiration is correct?","Breathing supplies the oxygen that cells use in respiration","Breathing and respiration are the same","Respiration happens only in the lungs","Breathing releases energy from glucose","Breathing is gas exchange. Respiration happens in cells."],
+ [3,"A mouse is kept in a sealed jar with a dish of limewater. What will happen over time?","The limewater turns cloudy","The limewater stays clear","The limewater turns blue","The limewater boils","The mouse respires and makes carbon dioxide."],
+ [3,"Which cell would you expect to contain the most mitochondria?","A heart muscle cell","A fat storage cell","A skin cell on the surface","A bone cell","Heart muscle works constantly and needs a lot of energy."]],
+ g:{2:function(){var b=R(5,12);return {q:"A student counts "+b+" breaths in 30 seconds. What is her breathing rate in breaths per minute?",a:""+b*2,sol:"A minute is twice as long as 30 seconds, so "+b+" × 2 = "+b*2+"."};},
+ 3:function(){var p=P([[10,25],[12,30],[20,30],[16,40],[15,45],[20,50],[10,30]]);return {q:"A student's breathing rate rises from "+p[0]+" to "+p[1]+" breaths per minute during exercise. What is the percentage increase? (%)",a:f((p[1]-p[0])/p[0]*100),sol:"Increase = "+p[1]+" − "+p[0]+" = "+(p[1]-p[0])+". Percentage increase = "+(p[1]-p[0])+" ÷ "+p[0]+" × 100 = "+f((p[1]-p[0])/p[0]*100)+"%."};}}});
+ADD(4,{tq:[["What happens to a bulb if the switch in its circuit is opened?","goes out|it goes out|bulb goes out|does not light|turns off","gets brighter|gets dimmer|stays on","An open switch breaks the circuit."],
+ ["What type of energy does a cell store?","chemical|chemical energy","kinetic|thermal|sound","A cell stores chemical energy."],
+ ["What safety device in a plug melts if the current is too high?","fuse","switch|bulb|resistor","A fuse melts to break the circuit."],
+ ["What flows around a circuit?","current|electric current|charge","water|air|heat","Electric current is a flow of charge."],
+ ["Which particles carry the current in a metal wire?","electrons","protons|neutrons|atoms","Electrons carry the current in metals."],
+ ["What do we call materials that let current flow easily?","conductors|conductor","insulators|resistors|cells","Conductors let current flow."],
+ ["What do we call materials that do not let current flow easily?","insulators|insulator","conductors|cells|switches","Insulators do not let current flow."],
+ ["What does a resistor do to the current in a circuit?","reduces it|reduces current|limits it|limits current|resists it","increases it|stores it|measures it","A resistor limits the current."]],
+ mq:[[1,"Which material would you use for the outside of a plug?","Plastic","Copper","Iron","Aluminium","Plastic is an insulator, so it keeps you safe."],
+ [1,"Which metal is commonly used for the wire inside a cable?","Copper","Wood","Rubber","Glass","Copper is a good conductor."],
+ [2,"A circuit has a cell, a bulb and an open switch. How can you make the bulb light?","Close the switch","Add another bulb","Reverse the bulb","Add a resistor","Closing the switch completes the circuit."],
+ [2,"Why is a fuse put in a plug?","To break the circuit if the current is too large","To increase the current","To make the plug heavier","To store charge","A fuse protects against overheating and fires."],
+ [3,"How is a voltmeter correctly drawn in a circuit diagram?","In parallel with the component","In series with the component","Next to the switch only","Not connected","A voltmeter is connected across a component."],
+ [3,"A student connects an ammeter in parallel across a bulb. What is likely to happen?","The ammeter has very low resistance, so a large current flows through it","The bulb gets brighter and the ammeter reads zero","Nothing happens","The ammeter measures voltage","An ammeter in parallel makes almost a short circuit."],
+ [3,"What is a short circuit?","A path with very low resistance that lets a large current flow","A circuit with no cell","A circuit with a gap","A circuit with too many bulbs","A short circuit gives the current an easy route."],
+ [3,"Which energy transfer happens in a bulb?","Electrical to light and thermal","Light to electrical","Chemical to sound","Kinetic to electrical","A bulb gives out light and heat."],
+ [3,"Which energy transfer happens in a motor?","Electrical to kinetic","Kinetic to electrical","Light to electrical","Chemical to light","A motor transfers electrical energy to movement."],
+ [3,"Which energy transfer happens in a cell?","Chemical to electrical","Electrical to chemical","Light to chemical","Kinetic to sound","A cell turns stored chemical energy into electrical energy."],
+ [3,"What happens to the brightness of a bulb if a resistor is added in series?","It gets dimmer","It gets brighter","It stays the same","The bulb goes out at once","The resistor reduces the current."],
+ [3,"Why are circuit diagrams drawn with standard symbols?","They show the connections clearly and everyone can read them","They show the real colours","They show the weight of components","They are always smaller","Standard symbols make diagrams easy to read and share."],
+ [3,"A bulb lights when a metal object is joined across a gap but not when a plastic object is used. What does this show?","Metal is a conductor and plastic is an insulator","Plastic is a conductor","Both are conductors","Neither is a conductor","Only conductors complete the circuit."]]});
+ADD(5,{tq:[["Which quantity is measured in amps?","current|electric current","potential difference|resistance|energy","Current is measured in amps."],
+ ["What happens to the current at every point in a series circuit?","it stays the same|stays the same|same|is the same","it splits|it increases|it decreases","In a series circuit the current is the same everywhere."],
+ ["What happens to the current at a junction in a parallel circuit?","it splits|splits|it divides|divides","it stays the same|it vanishes|it doubles","The current splits between the branches."],
+ ["What is shared between components in a series circuit?","potential difference|voltage|p.d.","current|charge|resistance only","The potential difference of the cell is shared between components."],
+ ["Which meter is connected in series?","ammeter","voltmeter|thermometer|barometer","An ammeter is connected in series."],
+ ["Which meter is connected in parallel?","voltmeter","ammeter|thermometer|barometer","A voltmeter is connected in parallel."]],
+ mq:[[1,"Two identical bulbs are in series with a cell. How does their brightness compare with one bulb on the same cell?","Dimmer","Brighter","The same","They do not light","The p.d. is shared, so each bulb is dimmer."],
+ [1,"Two identical bulbs are in parallel with a cell. How does their brightness compare with one bulb on the same cell?","The same","Brighter","Dimmer","They do not light","Each branch has the full p.d."],
+ [2,"A fuse is rated at 3 A. An appliance draws 5 A. What happens?","The fuse melts and breaks the circuit","The appliance runs faster","The fuse gets bigger","Nothing happens","The current is above the rating, so the fuse melts."],
+ [2,"A student wants to measure the p.d. across a bulb. What should she do?","Connect a voltmeter in parallel with the bulb","Connect a voltmeter in series","Connect an ammeter in parallel","Connect an ammeter in series","A voltmeter is connected in parallel."],
+ [3,"In a series circuit the ammeter before bulb A reads 0.5 A. What does an ammeter between bulbs A and B read?","0.5 A","0.25 A","1.0 A","0 A","The current is the same everywhere in a series circuit."],
+ [3,"Why does every branch of a parallel circuit have the same p.d.?","Each branch is connected directly across the cell","The cell gets smaller","The wires are shorter","The current is smaller","Each branch connects across the same two points."],
+ [3,"A 12 V battery is connected across two bulbs in parallel. What is the p.d. across each bulb?","12 V","6 V","24 V","0 V","Each branch has the full battery p.d."],
+ [3,"A third identical bulb is added in series. What happens to the current from the cell?","It decreases","It increases","It stays the same","It becomes zero","More bulbs in series means more resistance and less current."],
+ [3,"A third identical bulb is added in parallel. What happens to the current from the cell?","It increases","It decreases","It stays the same","It becomes zero","More branches means more total current."],
+ [3,"Which statement is correct for a parallel circuit?","The branch currents add up to the current from the cell","The p.d. is shared between branches","The current is the same in each branch","Each branch has a different p.d.","The branch currents add up at the junction."],
+ [3,"Which statement is correct for a series circuit?","The p.d.s across the components add up to the p.d. of the cell","The current splits","The p.d. is the same across each component","The current is largest at the cell","P.d.s add up in series."],
+ [3,"Current is the flow of charge per second. Which is its unit?","Ampere","Volt","Ohm","Joule","Current is measured in amperes."]],
+ g:{3:function(){var r=R(0,2),a,b,c,T,V;if(r===0){a=P([0.1,0.2,0.3]);b=P([0.2,0.3,0.4]);c=P([0.1,0.4,0.5]);return {q:"A parallel circuit has three branches carrying "+a+" A, "+b+" A and "+c+" A. What current flows from the cell? (A)",a:f(a+b+c),sol:"The branch currents add up: "+a+" + "+b+" + "+c+" = "+f(a+b+c)+" A."};}
+ if(r===1){V=P([9,12,15]);a=R(1,2);b=R(2,3);c=R(1,2);return {q:"A "+V+" V battery is connected to four components in series. Voltmeters across three of them read "+a+" V, "+b+" V and "+c+" V. What does a voltmeter across the fourth read? (V)",a:""+(V-a-b-c),sol:"The p.d.s add up to the battery p.d.: "+V+" − "+a+" − "+b+" − "+c+" = "+(V-a-b-c)+" V."};}
+ T=P([1,1.2,1.5]);a=P([0.2,0.3]);b=P([0.4,0.5]);return {q:"The current from the cell is "+T+" A. Two branches carry "+a+" A and "+b+" A. A third branch carries the rest. What is the current in the third branch? (A)",a:f(T-a-b),sol:"Third branch = "+T+" − "+a+" − "+b+" = "+f(T-a-b)+" A."};}}});
+ADD(6,{tq:[["What do we call a material that does not let charge flow easily?","insulator|insulators","conductor|resistor|cell","Insulators do not let charge flow easily."],
+ ["Which charge do protons carry?","positive|positive charge","negative|neutral|no charge","Protons carry a positive charge."],
+ ["What charge does a neutron have?","neutral|none|no charge|zero","positive|negative|magnetic","Neutrons have no charge."],
+ ["What do we call the safe flow of charge to the ground to remove static?","earthing|grounding|discharge|earth","charging|insulating|heating","Earthing lets charge flow to the ground safely."],
+ ["What is the name for the force between charged objects?","electrostatic force|electrostatic|electric force","magnetic force|gravity|friction","The electrostatic force acts between charges."],
+ ["What is the name for the large spark between a cloud and the ground?","lightning","thunder|current|friction","Lightning is a huge static discharge."]],
+ mq:[[1,"A charged balloon is brought near small pieces of paper. What happens?","The paper is attracted to the balloon","The paper is repelled","The paper melts","Nothing happens","The balloon induces an opposite charge on the paper."],
+ [1,"Two balloons rubbed with the same cloth hang near each other. What happens?","They repel","They attract","They stick together","Nothing happens","They have the same charge."],
+ [2,"Why can you not charge a metal rod by rubbing it while holding it in your hand?","The charge flows through the metal and your body to earth","Metals have no electrons","Metals are insulators","Rubbing cools the metal","Conductors lose their charge to earth."],
+ [2,"Why are fuel tankers earthed?","To stop charge building up and causing a spark","To make them heavier","To make them faster","To keep the fuel cold","Earthing removes static charge."],
+ [2,"Why must aircraft be earthed when refuelling?","A spark could ignite the fuel vapour","To stop radio signals","To keep the engine cold","To make the plane lighter","Static charge could cause a spark near fuel."],
+ [3,"A rod becomes positively charged when rubbed with a cloth. What happened?","Electrons moved from the rod to the cloth","Electrons moved from the cloth to the rod","Protons moved to the rod","Protons moved to the cloth","Losing electrons makes an object positive."],
+ [3,"A positively charged rod is brought near a hanging neutral foil ball. What happens first?","The ball is attracted to the rod","The ball is repelled","The ball melts","Nothing happens","Opposite charge is induced on the near side of the ball."],
+ [3,"Why does a charged comb pick up small pieces of paper?","Opposite charges are induced on the paper","The paper is magnetic","The paper is wet","Air pushes the paper","Induced opposite charge causes attraction."],
+ [3,"Why does lightning often strike tall objects?","They give charge an easy path to earth","Tall objects repel charge","Tall objects are insulators","Lightning avoids metal","Tall conductors give a shorter, easier path to earth."],
+ [3,"Why is a lightning conductor made of copper?","Copper is a good conductor, so the charge flows safely to earth","Copper is magnetic","Copper is an insulator","Copper is very light","Copper carries the discharge to the ground."],
+ [3,"Rod A repels rod B and attracts rod C. Which statement must be true?","A and B have the same charge, and C has the opposite charge","A and C have the same charge","B and C attract each other","All three have the same charge","Repel means the same charge. Attract means opposite charge."],
+ [3,"Why does static electricity build up more easily in dry air?","Moist air lets charge leak away","Dry air is a conductor","Water adds charge","Dry air has more electrons","Water vapour helps charge escape."],
+ [3,"An insulated object loses some electrons. Which statement is correct?","It is positively charged and still has the same number of protons","It is positively charged and has lost protons","It is negatively charged and gained protons","It is negatively charged and has the same protons","Only electrons move. Protons stay in the nucleus."],
+ [3,"Why does a Van de Graaff generator make a person's hair stand on end?","The hairs gain the same charge and repel each other","The hairs become magnetic","The hairs become wet","The hairs are attracted to the dome","Like charges repel, so the hairs move apart."]]});
+ADD(7,{tq:[["Which pole of a magnet points towards the Earth's geographic north?","north pole|north seeking pole|north|north-seeking pole","south pole|east pole|west pole","The north-seeking pole of a magnet points north."],
+ ["What instrument shows the direction of a magnetic field?","compass|plotting compass","thermometer|ammeter|voltmeter","A compass needle lines up with the magnetic field."],
+ ["What is the name of a magnet that only works when a current flows?","electromagnet","bar magnet|permanent magnet|horseshoe magnet","An electromagnet is magnetic only while current flows."],
+ ["Which part of the Earth makes it act like a giant bar magnet?","core|iron core|the core|outer core","crust|atmosphere|mantle","The Earth's core produces its magnetic field."],
+ ["What do we call materials that are attracted by a magnet?","magnetic|magnetic materials|magnetic material","insulating|conducting|plastic","Iron, steel, nickel and cobalt are magnetic."]],
+ mq:[[1,"What is a permanent magnet?","A magnet that always has a magnetic field","A magnet that only works with a current","A magnet that is not magnetic","A magnet made from plastic","It stays magnetic without needing a current."],
+ [1,"What happens if the current through an electromagnet is reversed?","The poles swap","The magnet stops working for ever","The magnet gets heavier","The coil melts","Reversing the current reverses the poles."],
+ [2,"Which can be used to show the shape of a magnetic field?","Iron filings","A thermometer","A stopwatch","A voltmeter","Iron filings line up along the field lines."],
+ [2,"Why do iron filings gather mostly at the poles of a magnet?","The magnetic field is strongest there","The poles are heavier","The poles are hotter","Iron is repelled by the poles","The field lines are closest together at the poles."],
+ [2,"Which device uses an electromagnet to make sound?","Loudspeaker","Thermometer","Battery","Fuse","A loudspeaker uses an electromagnet to move a cone."],
+ [3,"A student wants to double the strength of an electromagnet. Which change is most likely to work?","Increase the number of turns and the current","Use a plastic core","Use thinner wire only","Make the coil longer only","More turns and more current strengthen an electromagnet."],
+ [3,"Why must the core of an electromagnet be soft iron rather than steel?","Soft iron loses its magnetism when the current stops","Steel is not magnetic","Steel is too heavy","Soft iron is a better insulator","Soft iron is easily magnetised and demagnetised."],
+ [3,"A compass needle near a wire carrying current moves. Why?","The current creates a magnetic field around the wire","The wire becomes charged","The wire heats up","The needle is attracted to the battery","An electric current produces a magnetic field."],
+ [3,"What does it show when two field lines are close together?","The field is strong","The field is weak","The field has no direction","The magnet is broken","Closer field lines mean a stronger field."],
+ [3,"Two bar magnets attract each other. The end of one nearest the other is a north pole. What is the nearest end of the other?","A south pole","A north pole","No pole","Either pole","Unlike poles attract."],
+ [3,"How can you tell whether a metal bar is a magnet or just a magnetic material?","Only a magnet can repel another magnet","Both will attract a magnet","Magnets are heavier","Magnetic materials are shinier","Repulsion only happens between two magnets."],
+ [3,"Why does an iron nail become magnetic when stroked with a magnet?","Its tiny magnetic regions line up","It gains electrons","It becomes hotter","It becomes lighter","The magnetic domains in the iron align."],
+ [3,"What is the main advantage of an electromagnet over a permanent magnet?","It can be switched on and off and its strength changed","It is always stronger","It never loses strength","It needs no wire","The current controls an electromagnet."],
+ [3,"Which feature of a diagram shows the direction of a magnetic field line?","An arrow from north to south outside the magnet","An arrow from south to north outside the magnet","A line with no arrow","A dotted line","Field lines point from north to south outside the magnet."]]});
+
+ADD(2,{mq:[[3,"A student says a single muscle cell is an organ. What is wrong with this?","An organ is made of several tissues, not one cell","Muscle cells are organs","Organs are smaller than cells","Cells are made of organs","Organs are built from tissues, which are built from cells."],
+ [3,"Which sequence shows increasing complexity?","Nerve cell, nervous tissue, brain, nervous system","Brain, nerve cell, nervous tissue, nervous system","Nervous system, brain, nervous tissue, nerve cell","Nervous tissue, nerve cell, nervous system, brain","Cells make tissues, tissues make organs and organs make organ systems."],
+ [3,"Why do multicellular organisms need a transport system?","Diffusion is too slow to supply cells over long distances","Cells cannot respire","They have no cell membranes","Water cannot enter cells","Large organisms have a small surface area compared with their volume."],
+ [3,"Which organs make up the respiratory system?","Lungs, trachea and bronchi","Stomach, liver and pancreas","Heart and blood vessels","Brain and spinal cord","The respiratory system exchanges gases."],
+ [3,"Which is an example of a plant organ?","Leaf","Palisade cell","Xylem tissue","Chloroplast","A leaf contains several tissues, so it is an organ."],
+ [3,"Which statement about tissues is correct?","Different tissues can be combined to make an organ","A tissue is larger than an organ","A tissue is a single cell","Tissues are made of organs","Organs contain different tissues working together."],
+ [3,"Which statement explains why the heart is an organ?","It contains muscle, nerve and connective tissues working together","It is made of one type of cell","It has a cell wall","It is a whole organism","An organ contains several different tissues."]]});
+ADD(4,{mq:[[3,"A bulb is in series with a cell. A second identical bulb is added in series. What happens to the first bulb?","It becomes dimmer","It becomes brighter","It stays the same","It goes out and never relights","The current in the circuit falls."],
+ [3,"A circuit has two parallel branches. One branch is cut. What happens in the other branch?","Nothing changes","The current stops","The bulb goes dimmer","The bulb gets brighter","Parallel branches work independently."],
+ [3,"What is the job of the wires in a circuit?","To provide a low-resistance path for current","To store energy","To supply energy","To measure current","Wires are good conductors."],
+ [3,"Which component would you add to change the brightness of a bulb?","A variable resistor","A voltmeter","A fuse","An ammeter","A variable resistor changes the current."],
+ [3,"Which circuit lets you switch two bulbs on and off separately?","Bulbs in parallel, each with its own switch","Bulbs in series with one switch","Bulbs in parallel with no switch","One bulb and two cells","Each branch can be controlled on its own."],
+ [3,"A cell, a bulb and an ammeter are in series. What does the ammeter measure?","The current through the bulb","The p.d. across the bulb","The resistance of the bulb","The energy used","An ammeter in series measures current."],
+ [3,"Why are most metals good conductors?","They contain free electrons that can move","They contain free protons","They contain no atoms","They are always hot","Free electrons carry the current."],
+ [3,"A graphite pencil lead completes a circuit and lights a bulb. What does this show?","Graphite is a conductor","Graphite is an insulator","Graphite is a cell","Graphite is magnetic","The lead lets current flow."]]});
+ADD(6,{mq:[[3,"A balloon rubbed on hair stays stuck to a wall for minutes. What helps the charge stay on the balloon?","Rubber is an insulator, so charge cannot flow away easily","Rubber is a conductor","The wall is a cell","The hair is magnetic","Insulators hold static charge."],
+ [3,"Why does a charged balloon lose its charge faster in damp air?","Water in the air helps charge leak away","Damp air is an insulator","Damp air adds electrons","The balloon becomes magnetic","Water droplets conduct charge away."],
+ [3,"What happens to the charge on a metal ball when an earthed wire touches it?","It flows to earth","It doubles","It becomes magnetic","It stays the same","Earthing lets the charge flow to the ground."],
+ [3,"Which statement about charging by friction is correct?","Electrons transfer between the two surfaces being rubbed","Protons transfer between the surfaces","Neutrons make the surfaces attract","New charge is created from nothing","Only electrons move, and the total charge stays the same."]]});
+ADD(7,{mq:[[3,"Which type of material is used to make a permanent magnet?","Hard magnetic materials such as steel","Soft iron only","Plastic","Copper","Steel keeps its magnetism."],
+ [3,"A student wants an electromagnet to lift a heavier load. Which change helps most?","Increase the current and add more coils","Use a plastic core","Use a shorter wire","Turn the battery round","More current and more coils make it stronger."],
+ [3,"Why are electromagnets used in electric bells?","They can be switched on and off rapidly to move the hammer","They are always on","They make the bell heavier","They make no sound","Rapid switching makes the hammer strike repeatedly."],
+ [3,"What is the shape of the magnetic field around a straight wire carrying current?","Circles around the wire","Straight lines along the wire","Lines from north to south only","There is no field","The field forms circles around the wire."],
+ [3,"A compass is placed very close to a strong bar magnet. What does the needle do?","It lines up with the magnet's field","It points to geographic north","It spins without stopping","It stops working","The bar magnet's field is stronger than the Earth's field there."]]});
+
 function mcq(q,right,wrong,sol,fig){var o=shuf([right].concat(wrong));return {q:q,o:o,a:o.indexOf(right),sol:sol,fig:fig||""};}
 function pick3(a,d){var o=shuf(a),r=[],i;for(i=0;i<o.length&&r.length<3;i++)if(r.indexOf(cap(o[i]))<0)r.push(cap(o[i]));(d||[]).forEach(function(x){if(r.length<3&&r.indexOf(cap(x))<0)r.push(cap(x));});return r;}
-function pool(m,t){var M=BANK[m],p=[];
- (M.f||[]).forEach(function(fn){var g=FG[fn];g.pts.forEach(function(pt,i){var nm=pt[4].split("|"),oth=g.pts.filter(function(x,j){return j!==i&&x[4].split("|").indexOf(nm[0])<0;}).map(function(x){return x[4].split("|")[0];}),q=(g.q||"Name part {n} of the "+g.t+".").replace("{n}",i+1),fg=figHTML(g,i);
+function pool(m,t){var M=BANK[m],p=[],q;
+ if(t<3){(M.f||[]).forEach(function(fn){var g=FG[fn];g.pts.forEach(function(pt,i){var nm=pt[4].split("|"),oth=g.pts.filter(function(x,j){return j!==i&&x[4].split("|").indexOf(nm[0])<0;}).map(function(x){return x[4].split("|")[0];}),q=(g.q||"Name part {n} of the "+g.t+".").replace("{n}",i+1),fg=figHTML(g,i);
   if(t===0)p.push(mcq(q,cap(nm[0]),pick3(oth,g.d),pt[5],fg));else p.push({k:"t",q:q,a:nm,sol:pt[5],fig:fg,mask:t===1});});});
- (M.tq||[]).forEach(function(x){var a=x[1].split("|");if(t===0)p.push(mcq(x[0],cap(a[0]),x[2].split("|").map(cap),x[3]));else p.push({k:"t",q:x[0],a:a,sol:x[3],fig:"",mask:false});});
+ (M.tq||[]).forEach(function(x){var a=x[1].split("|");if(t===0)p.push(mcq(x[0],cap(a[0]),x[2].split("|").map(cap),x[3]));else p.push({k:"t",q:x[0],a:a,sol:x[3],fig:"",mask:false});});}
  (M.mq||[]).forEach(function(x){if(x[0]===t)p.push(mcq(x[1],x[2],[x[3],x[4],x[5]],x[6]));});
- return p;}
-function build(m,t){var p=shuf(pool(m,t)),g=BANK[m].g&&BANK[m].g[t],ng=g?Math.min(NQ,Math.max(3,NQ-p.length)):0,l=p.slice(0,NQ-ng),seen={},n=0,q;
+ if(t===3)(M.mq||[]).forEach(function(x){if(x[0]===2){q=mcq(x[1],x[2],[x[3],x[4],x[5]],x[6]);q.fill=1;p.push(q);}});
+ p.forEach(function(x){x.m=m;x.t=t;});return p;}
+function nq(t){return t===3?20:15;}
+function skey(q){return q.t+"|"+q.q;}
+function prefer(p){var u=[],o=[];p.forEach(function(q){(S.seen[skey(q)]?o:u).push(q);});o.sort(function(a,b){return S.seen[skey(a)]-S.seen[skey(b)];});return shuf(u).concat(o);}
+function build(m,t){var n=nq(t),p=pool(m,t),g=BANK[m].g&&BANK[m].g[t],ng=g?Math.min(n,Math.max(4,n-p.length)):0,real=p.filter(function(x){return !x.fill;}),fill=p.filter(function(x){return x.fill;}),l=prefer(real).concat(prefer(fill)).slice(0,n-ng),seen={},k=0,q;
  l.forEach(function(x){seen[x.q]=1;});
- while(g&&l.length<NQ&&n++<200){q=g();if(!seen[q.q]){seen[q.q]=1;l.push(q);}}
- l.forEach(function(x){x.m=m;x.t=t;});return shuf(l);}
-function one(m,t){var p=pool(m,t),g=BANK[m].g&&BANK[m].g[t],q=(g&&(!p.length||Math.random()<.3))?g():P(p);q.m=m;q.t=t;return q;}
-
+ while(g&&l.length<n&&k++<300){q=g();if(!seen[q.q]){seen[q.q]=1;q.gen=1;q.m=m;q.t=t;l.push(q);}}
+ return shuf(l);}
+function one(m,t){var p=prefer(pool(m,t).filter(function(x){return !x.fill;})),g=BANK[m].g&&BANK[m].g[t],q;if(g&&(!p.length||Math.random()<.3)){q=g();q.gen=1;q.m=m;q.t=t;return q;}return p[0];}
 /* ---------- answer checking ---------- */
 function norm(s){return s.replace(/\s/g,"").replace(/\u2212/g,"-");}
 function pv(s){if(s.indexOf("/")>0){var p=s.split("/");return p.length===2&&+p[1]!==0&&!isNaN(+p[0])?+p[0]/+p[1]:NaN;}return s===""||isNaN(+s)?NaN:+s;}
@@ -238,10 +431,11 @@ var streak=0,TN2=["","Bronze","Silver","Gold"];
 function confetti(){var w=document.createElement("div");w.className="conf";var cs=["#ffd23f","#2dd4bf","#818cf8","#f472b6","#4ade80","#fb923c"],i,p;
  for(i=0;i<45;i++){p=document.createElement("i");p.style.left=R(0,100)+"%";p.style.background=cs[R(0,5)];p.style.animationDuration=(2.2+Math.random()*2)+"s";p.style.animationDelay=(Math.random()*.6)+"s";p.style.transform="rotate("+R(0,360)+"deg)";w.appendChild(p);}
  document.body.appendChild(w);setTimeout(function(){w.remove();},5000);}
-function medalHTML(t,m,l,sm){return '<div class="medal t'+t+(sm?' sm':'')+'"><i class="mshine"></i><span class="mi">'+(t?MODS[m][2]:"?")+'</span><span class="mt">'+(sm?"":TN[l])+'</span></div>';}
+function medalHTML(t,m,l,sm,ic,lab){return '<div class="medal t'+t+(sm?' sm':'')+'"><i class="mshine"></i><span class="mi">'+(t?(ic||MODS[m][2]):"?")+'</span><span class="mt">'+(sm?"":(lab||TN[l]))+'</span></div>';}
 function trophies(){var h,m,l,t,n=0,k;for(k in S.badges)if(S.badges[k]>0)n++;
- h='<h1>My trophies 🏆</h1><p class="sub">'+n+' of '+MODS.length*3+' medals earned · Bronze 80% · Silver 90% · Gold 100%</p><div class="card">';
- for(m=0;m<MODS.length;m++){h+='<h2>'+(m+1)+'. '+MODS[m][0]+'</h2><div class="trow">';for(l=0;l<3;l++){t=S.badges[m+"_"+l]||0;h+='<div>'+medalHTML(t,m,l,true)+(t?TN2[t]:TN[l])+'</div>';}h+='</div>';}
+ h='<h1>My trophies 🏆</h1><p class="sub">'+n+' of '+(MODS.length*4+1)+' medals earned<br>Tiers 1–3: Bronze 80% · Silver 90%<br>Expert and Boss: Bronze 90% · Silver 95% · Gold 100%</p><div class="card">';
+ for(m=0;m<MODS.length;m++){h+='<h2>'+(m+1)+'. '+MODS[m][0]+'</h2><div class="trow">';for(l=0;l<4;l++){t=S.badges[m+"_"+l]||0;h+='<div>'+medalHTML(t,m,l,true)+(t?TN2[t]:TN[l])+'</div>';}h+='</div>';}
+ t=S.badges.boss||0;h+='<h2>👑 Boss round</h2><div class="trow"><div>'+medalHTML(t,0,0,true,"👑")+(t?TN2[t]:"Boss")+'</div></div>';
  app.innerHTML=h+'</div><button class="btn alt" id="bk">◀ Back</button>';$("bk").onclick=home;}
 /* ---------- screens ---------- */
 function welcome(){
@@ -251,17 +445,17 @@ function welcome(){
 function home(){
  if(!S.name)return welcome();
  var h='<h1>Hi '+esc(S.name)+'</h1><p class="sub">Choose a topic, or test yourself across everything.</p><div class="row2"><button class="btn" id="mx">'+(S.sess.x?"▶ Resume mixed":"🔀 Mixed review")+'</button><button class="btn alt" id="qc">'+(S.sess.q?"▶ Resume check":"🎯 Quick check")+'</button></div>';
- MODS.forEach(function(m,i){var st=S.stat[i],acc=st&&st.n?Math.round(100*st.c/st.n)+"% correct so far":"not started";h+='<button class="mod" data-m="'+i+'"><span class="ic">'+m[2]+'</span><span><b>'+(i+1)+'. '+m[0]+'</b><small>'+m[1]+'</small><em>'+Math.min(S.prog[i],3)+' of 3 tiers unlocked · '+acc+'</em></span></button>';});
+ h+=bossRow();MODS.forEach(function(m,i){var st=S.stat[i],acc=st&&st.n?Math.round(100*st.c/st.n)+"% correct so far":"not started";h+='<button class="mod" data-m="'+i+'"><span class="ic">'+m[2]+'</span><span><b>'+(i+1)+'. '+m[0]+'</b><small>'+m[1]+'</small><em>'+Math.min(S.prog[i],4)+' of 4 tiers unlocked · '+acc+'</em></span></button>';});
  h+='<div class="foot"><button class="btn alt sm" id="tr">🏆 Trophies</button> <button class="btn alt sm" id="par">Parent area</button> <button class="btn alt sm" id="mu">'+(S.mute?"🔇":"🔊")+'</button> <button class="btn alt sm" id="mm">'+(S.nomusic?"🔕":"🎵")+'</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".mod").forEach(function(b){b.onclick=function(){tiers(+b.dataset.m);};});
- $("mx").onclick=startMix;$("qc").onclick=startQuick;$("par").onclick=gate;$("tr").onclick=trophies;
+ $("mx").onclick=startMix;$("qc").onclick=startQuick;$("par").onclick=gate;$("tr").onclick=trophies;$("bs").onclick=function(){if(bossOK()||S.sess.b)startBoss();};
  $("mu").onclick=function(){S.mute=!S.mute;save();home();if(!S.mute)sfx("ok");};
  $("mm").onclick=function(){S.nomusic=!S.nomusic;save();msync();home();};
 }
 function tiers(m){
- var h='<h1>'+MODS[m][0]+'</h1><p class="sub">Score 80% or more to unlock the next tier.</p><div class="card" style="padding:8px 14px">';
- for(var t=0;t<3;t++){var ok=t<S.prog[m],b=S.best[m+"_"+t],ss=S.sess["t"+m+"_"+t];h+='<button class="lvl" data-t="'+t+'"'+(ok?"":" disabled")+'><b>'+(ok?"":"🔒 ")+TN[t]+(ss&&ss.qi<ss.qs.length?'<small>▶ In progress ('+ss.qi+'/'+ss.qs.length+')</small>':b!=null?'<small>Best '+b+'%</small>':"")+'</b>'+TD[t]+'</button>';}
+ var h='<h1>'+MODS[m][0]+'</h1><p class="sub">Score 80% to unlock the next tier (90% for Expert).</p><div class="card" style="padding:8px 14px">';
+ for(var t=0;t<4;t++){var ok=t<S.prog[m],b=S.best[m+"_"+t],ss=S.sess["t"+m+"_"+t],md=S.badges[m+"_"+t]||0;h+='<button class="lvl" data-t="'+t+'"'+(ok?"":" disabled")+'><b>'+(ok?"":"🔒 ")+(t===3?"⭐ ":"")+TN[t]+(ss&&ss.qi<ss.qs.length?'<small>▶ In progress ('+ss.qi+'/'+ss.qs.length+')</small>':b!=null?'<small>'+(md?["","🥉","🥈","🥇"][md]+" ":"")+'Best '+b+'%</small>':"")+'</b>'+TD[t]+' · '+nq(t)+' questions</button>';}
  app.innerHTML=h+'</div><button class="btn alt" id="bk">◀ Back</button>';
  app.querySelectorAll(".lvl").forEach(function(b){b.onclick=function(){startTier(m,+b.dataset.t);};});
  $("bk").onclick=home;
@@ -275,12 +469,17 @@ function resume(k,m,t){var x=S.sess[skeyOf(k,m,t)];if(!x||!x.qs||!x.qs.length)re
  if(!confirm("Continue where you stopped (question "+(qi+1)+" of "+qs.length+")?\n\nOK = continue, Cancel = start a new round.")){delete S.sess[skeyOf(k,m,t)];save();return false;}
  draw();return true;}
 function startTier(m,t){if(resume("t",m,t))return;begin("t",m,t,build(m,t));}
-function startMix(){if(resume("x",0,0))return;var l=[],seen={},i,m,t,q,n=0;while(l.length<NQ&&n++<100){m=R(0,BANK.length-1);t=R(0,Math.min(S.prog[m],3)-1);q=one(m,t);if(!seen[q.q]){seen[q.q]=1;l.push(q);}}begin("x",0,0,l);}
+function startMix(){if(resume("x",0,0))return;var l=[],seen={},m,t,q,n=0;while(l.length<15&&n++<300){m=R(0,BANK.length-1);t=R(0,Math.min(S.prog[m],4)-1);q=one(m,t);if(q&&!seen[q.q]){seen[q.q]=1;l.push(q);}}begin("x",0,0,l);}
+function bossOK(){for(var m=0;m<BANK.length;m++)if((S.best[m+"_3"]||0)>=90)return true;return false;}
+function startBoss(){if(resume("b",0,0))return;var l=[],seen={},ms=[],m,t,q,n=0;for(m=0;m<BANK.length;m++)if(S.prog[m]>=3)ms.push(m);ms=shuf(ms);
+ while(l.length<20&&n<400){m=ms[n++%ms.length];t=R(2,Math.min(3,S.prog[m]-1));q=one(m,t);if(q&&!seen[q.q]){seen[q.q]=1;l.push(q);}}
+ begin("b",0,0,shuf(l));}
+function bossRow(){var ok=bossOK();return '<button class="btn" id="bs" style="width:100%;margin:0 0 12px;'+(ok||S.sess.b?'':'opacity:.5')+'">'+(S.sess.b?'▶ Resume Boss round':ok?'👑 Boss round · 20 hard questions':'🔒 Boss round · pass an Expert tier to unlock')+'</button>';}
 function startQuick(){if(resume("q",0,0))return;var l=[],m;for(m=0;m<BANK.length;m++){l.push(one(m,0));l.push(one(m,1));}begin("q",0,0,shuf(l));}
 function draw(){
  var q=qs[qi],h,i;ent="";done=false;wait=false;clearTimeout(tmr);
  h='<div class="top"><button class="btn alt sm" id="hm">🏠 Home</button><span><button class="btn alt sm tb" id="sp">✏️</button> <button class="btn alt sm tb" id="pc" style="display:none">Clear</button> <button class="btn alt sm tb" id="mm2">'+(S.nomusic?"🔕":"🎵")+'</button> <button class="btn alt sm tb" id="mt">'+(S.mute?"🔇":"🔊")+'</button></span></div>'+
- '<div class="bar"><i style="width:'+(qi/qs.length*100)+'%"></i></div><div class="card"><div class="tag">'+(ses.k==="t"?TN[ses.t]:ses.k==="x"?"Mixed review":"Quick check")+' · Question '+(qi+1)+' of '+qs.length+' · '+MODS[q.m][0]+'</div>'+(q.fig||"")+'<div class="qt">'+q.q+'</div>';
+ '<div class="bar"><i style="width:'+(qi/qs.length*100)+'%"></i></div><div class="card"><div class="tag">'+(ses.k==="t"?TN[ses.t]:ses.k==="x"?"Mixed review":ses.k==="b"?"Boss round":"Quick check")+' · Question '+(qi+1)+' of '+qs.length+' · '+MODS[q.m][0]+'</div>'+(q.fig||"")+'<div class="qt">'+q.q+'</div>';
  if(q.o){for(i=0;i<q.o.length;i++)h+='<button class="opt" data-i="'+i+'">'+q.o[i]+'</button>';}
  else if(q.k==="t"){h+=(q.mask?'<div class="mask">'+mask(q.a[0])+'</div>':"")+'<input id="ti" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Type your answer"><button class="btn" id="ok">Check</button>';}
  else h+='<div id="ans"></div>';
@@ -314,7 +513,7 @@ function key(k){
 }
 function grade(ok,given,note){
  var q=qs[qi],a=$("ans"),fb=$("fb"),ti=$("ti"),shown=q.o?q.o[q.a]:q.k==="t"?q.a[0]:String(q.a).replace(/-/g,"−"),st,pp;done=true;wait=true;
- st=S.stat[q.m]=S.stat[q.m]||{n:0,c:0};st.n++;pp=ses.per[q.m]=ses.per[q.m]||{n:0,c:0};pp.n++;
+ if(!q.gen)S.seen[skey(q)]=(S.seen[skey(q)]||0)+1;st=S.stat[q.m]=S.stat[q.m]||{n:0,c:0};st.n++;pp=ses.per[q.m]=ses.per[q.m]||{n:0,c:0};pp.n++;
  if(q.o){app.querySelectorAll(".opt").forEach(function(b){if(+b.dataset.i===q.a)b.classList.add("good");else if(+b.dataset.i===given)b.classList.add("bad");});}
  else if(ti){ti.disabled=true;ti.classList.add(ok?"good":"bad");$("ok").style.display="none";}
  else a.classList.add(ok?"good":"bad");
@@ -327,16 +526,21 @@ function grade(ok,given,note){
 function next(){clearTimeout(tmr);qi++;qi<qs.length?draw():finish();}
 function fmt(t){var d=new Date(t);return d.getDate()+"/"+(d.getMonth()+1)+" "+("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);}
 function finish(){
- var n=qs.length,need=Math.ceil(.8*n),pc=Math.round(100*sc/n),h='<div class="card" style="margin-top:20px;text-align:center"><h1>'+sc+' out of '+n+'</h1>',pass=false,m;
- if(ses.k==="t"){pass=sc>=need;m=ses.m;var bk=m+"_"+ses.t;if(S.best[bk]==null||pc>S.best[bk])S.best[bk]=pc;if(pass&&ses.t<2&&S.prog[m]<ses.t+2)S.prog[m]=ses.t+2;
-  var tier=pass?(sc>=n?3:(100*sc/n>=90?2:1)):0,old=S.badges[bk]||0;if(tier>old)S.badges[bk]=tier;if(pass)h+=medalHTML(tier,m,ses.t)+'<div class="bn">'+TN2[tier]+' medal'+(tier>old?' · NEW!':'')+'</div>';
-  h+=pass?'<p>Well done, '+esc(S.name)+'! '+(ses.t<2?TN[ses.t+1]+' is now open.':'You have completed every tier of this topic.')+'</p>':'<p>You need '+need+' out of '+n+' (80%) to move on. Read the explanations for the ones you missed and try again.</p>';
-  h+=(pass&&ses.t<2?'<button class="btn" id="nt">Next tier ▶</button><br>':'')+'<button class="btn alt" id="rt">Play again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
+ var n=qs.length,pc=Math.round(100*sc/n),h='<div class="card" style="margin-top:20px;text-align:center"><h1>'+sc+' out of '+n+'</h1>',pass=false,m,tier=0,old=0,bk,tp=(ses.t===3||ses.k==="b")?90:80,need=Math.ceil(tp/100*n);
+ if(ses.k==="t"||ses.k==="b"){
+  pass=sc>=need;if(ses.k==="t"){m=ses.m;bk=m+"_"+ses.t;}else bk="boss";
+  if(S.best[bk]==null||pc>S.best[bk])S.best[bk]=pc;
+  if(ses.k==="t"&&pass&&ses.t<3&&S.prog[m]<ses.t+2)S.prog[m]=ses.t+2;
+  if(pass)tier=(ses.t===3||ses.k==="b")?(sc>=n?3:(pc>=95?2:1)):(pc>=90?2:1);
+  old=S.badges[bk]||0;if(tier>old)S.badges[bk]=tier;
+  if(pass)h+=(ses.k==="b"?medalHTML(tier,0,0,false,"👑","Boss"):medalHTML(tier,m,ses.t))+'<div class="bn">'+TN2[tier]+' medal'+(tier>old?' · NEW!':'')+'</div>';
+  h+=pass?'<p>'+(ses.k==="b"?'Boss defeated, '+esc(S.name)+'!':'Well done, '+esc(S.name)+'! '+(ses.t<3?TN[ses.t+1]+' is now open.':'You have completed every tier of this topic.'))+'</p>':'<p>You need '+need+' out of '+n+' ('+tp+'%) to '+(ses.k==="b"?'win':'move on')+'. Read the explanations for the ones you missed and try again.</p>';
+  h+=(pass&&ses.k==="t"&&ses.t<3?'<button class="btn" id="nt">Next tier ▶</button><br>':'')+'<button class="btn alt" id="rt">Play again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
  else{h+='<p>Results by topic:</p>';for(m in ses.per){var p=ses.per[m];h+='<div class="wr">'+MODS[m][0]+': <b>'+p.c+'/'+p.n+'</b>'+(p.c/p.n<.7?' · needs more practice':'')+'</div>';}h+='<button class="btn alt" id="rt">Go again</button><br><button class="btn alt" id="mn">Menu</button></div>';}
  delete S.sess[skeyOf(ses.k,ses.m,ses.t)];S.plays.push({k:ses.k,m:ses.m,t:ses.t,s:sc,n:n,d:Date.now()});S.plays=S.plays.slice(-60);save();
- app.innerHTML=h;sfx(ses.k==="t"&&!pass?"no":"win");if(ses.k==="t"&&pass)setTimeout(confetti,250);
+ app.innerHTML=h;sfx((ses.k==="t"||ses.k==="b")&&!pass?"no":"win");if((ses.k==="t"||ses.k==="b")&&pass)setTimeout(confetti,250);
  if($("nt"))$("nt").onclick=function(){startTier(ses.m,ses.t+1);};
- $("rt").onclick=function(){ses.k==="t"?startTier(ses.m,ses.t):ses.k==="x"?startMix():startQuick();};$("mn").onclick=home;
+ $("rt").onclick=function(){ses.k==="t"?startTier(ses.m,ses.t):ses.k==="x"?startMix():ses.k==="b"?startBoss():startQuick();};$("mn").onclick=home;
 }
 /* ---------- parent area ---------- */
 function gate(){
@@ -345,8 +549,8 @@ function gate(){
  $("gg").onclick=function(){var v=$("pn").value;if(!/^\d{4}$/.test(v)){$("ge").textContent="Use exactly 4 digits";return;}if(!S.pin){S.pin=v;save();parent();}else if(v===S.pin)parent();else $("ge").textContent="Wrong PIN";};
 }
 function parent(){
- var h='<h1>Progress: '+esc(S.name)+'</h1><div class="card"><h2>Accuracy and best scores</h2><table class="tbl"><tr><th></th><th>Acc.</th><th>Warm</th><th>Prac.</th><th>Chal.</th></tr>',i,t,s,b;
- for(i=0;i<MODS.length;i++){s=S.stat[i];h+='<tr><td>'+(i+1)+'. '+MODS[i][0]+'</td><td>'+(s&&s.n?Math.round(100*s.c/s.n)+"%":"–")+'</td>';for(t=0;t<3;t++){b=S.best[i+"_"+t];h+='<td>'+(b!=null?b+"%":(t<S.prog[i]?"–":"🔒"))+'</td>';}h+='</tr>';}
+ var h='<h1>Progress: '+esc(S.name)+'</h1><div class="card"><h2>Accuracy and best scores</h2><table class="tbl"><tr><th></th><th>Acc.</th><th>Warm</th><th>Prac.</th><th>Chal.</th><th>Exp.</th></tr>',i,t,s,b;
+ for(i=0;i<MODS.length;i++){s=S.stat[i];h+='<tr><td>'+(i+1)+'. '+MODS[i][0]+'</td><td>'+(s&&s.n?Math.round(100*s.c/s.n)+"%":"–")+'</td>';for(t=0;t<4;t++){b=S.best[i+"_"+t];h+='<td>'+(b!=null?b+"%":(t<S.prog[i]?"–":"🔒"))+'</td>';}h+='</tr>';}
  h+='</table></div><div class="card"><h2>Recent mistakes</h2>';
  var w=S.wrong.slice().reverse().slice(0,30);if(!w.length)h+='<p>None recorded yet.</p>';
  w.forEach(function(x){h+='<div class="wr"><b>'+x.q+'</b> → correct '+x.c+', she wrote '+esc(x.u)+' <em>· '+MODS[x.m][0]+' · '+fmt(x.d)+'</em></div>';});
@@ -354,7 +558,7 @@ function parent(){
  '<div class="card"><button class="btn alt sm" id="cn">Change name</button> <button class="btn alt sm" id="rr">Reset all progress</button></div><button class="btn alt" id="bk">◀ Back</button>';
  app.innerHTML=h;var arm=false;$("bk").onclick=home;
  $("ex").onclick=function(){$("bc").value=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$("bc").select();};
- $("rs").onclick=function(){try{var d=JSON.parse(decodeURIComponent(escape(atob($("im").value.trim()))));if(!d.prog||d.prog.length!==8)throw 0;d.sess=d.sess||{};d.badges=d.badges||{};S=d;save();$("bm").textContent="Restored.";setTimeout(home,700);}catch(e){$("bm").textContent="That code did not work.";}};
+ $("rs").onclick=function(){try{var d=JSON.parse(decodeURIComponent(escape(atob($("im").value.trim()))));if(!d.prog||d.prog.length!==8)throw 0;d.sess=d.sess||{};d.badges=d.badges||{};d.seen=d.seen||{};S=d;save();$("bm").textContent="Restored.";setTimeout(home,700);}catch(e){$("bm").textContent="That code did not work.";}};
  $("cn").onclick=function(){S.name="";save();welcome();};
  $("rr").onclick=function(){if(!arm){arm=true;this.textContent="Tap again to confirm";}else{S=blank();save();welcome();}};
 }
